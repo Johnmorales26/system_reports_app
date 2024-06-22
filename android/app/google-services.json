@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "660592426653",
+    "project_id": "system-reports-app",
+    "storage_bucket": "system-reports-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:660592426653:android:2519f0c990b4c49cd51e74",
+        "android_client_info": {
+          "package_name": "com.example.system_reports_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAuuTPMLebekuEaYhg9ZvGrizMavSXAM8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
