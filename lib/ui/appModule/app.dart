@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:system_reports_app/ui/sliderModule/slider_screen.dart';
 
 import '../homeModule/home_screen.dart';
 import '../signInModule/sign_in_screen.dart';
@@ -20,6 +21,7 @@ class App extends StatelessWidget {
         initialRoute: _authenticationVerification(),
         //theme: brightness == Brightness.light ? theme.light() : theme.dark(),
         routes: {
+          SliderScreen.route: (context) => SliderScreen(),
           SignInScreen.route: (context) => const SignInScreen(),
           SignUpScreen.route: (context) => const SignUpScreen(),
           HomeScreen.route: (context) => const HomeScreen(),
@@ -31,7 +33,7 @@ class App extends StatelessWidget {
     if (FirebaseAuth.instance.currentUser != null) {
       return HomeScreen.route;
     } else {
-      return SignInScreen.route;
+      return SliderScreen.route;
     }
   }
 }

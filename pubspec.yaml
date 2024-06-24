@@ -41,6 +41,8 @@ dependencies:
   fluttertoast: ^8.2.6
   google_fonts: ^6.2.1
   lottie: ^3.1.2
+  carousel_slider: ^4.2.1
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +69,14 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/anim/login.json
+    - assets/images/slider_v1.svg
+    - assets/images/slider_v2.svg
+    - assets/images/slider_v3.svg
+    - assets/images/slider_v4.svg
+    - assets/images/slider_v5.svg
+    - assets/images/slider_v6.svg
+    - assets/images/slider_v7.svg
+    - assets/images/silbec.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -41,6 +41,26 @@ class SignInScreen extends StatelessWidget {
     );
   }
 
+  void _showAlertDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Contact administrator'),
+          content: const Text('You can contact the administrator to reset your password'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Close'),
+            )
+          ],
+        );
+      },
+    );
+  }
+
   Widget formForSignIn(BuildContext context) {
     final provider = Provider.of<SignInViewModel>(context);
     return Column(
@@ -61,6 +81,8 @@ class SignInScreen extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodyLarge),
                     const SizedBox(height: Dimens.commonPaddingExtraLarge),
                     _Form(),
+                    const SizedBox(height: Dimens.commonPaddingDefault),
+                    TextButton(onPressed: () => _showAlertDialog(context), child: const Text('Did you forget your password?')),
                     const SizedBox(height: Dimens.commonPaddingDefault),
                     SizedBox(
                         width: double.infinity,
