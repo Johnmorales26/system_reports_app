@@ -43,6 +43,7 @@ dependencies:
   lottie: ^3.1.2
   carousel_slider: ^4.2.1
   flutter_svg: ^2.0.10+1
+  cloud_firestore: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +77,9 @@ flutter:
     - assets/images/slider_v5.svg
     - assets/images/slider_v6.svg
     - assets/images/slider_v7.svg
+    - assets/images/error_404.svg
+    - assets/images/error_429.svg
+    - assets/images/search.svg
     - assets/images/silbec.png
   #   - images/a_dot_ham.jpeg
 

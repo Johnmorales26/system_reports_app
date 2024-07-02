@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:system_reports_app/data/local/UserDatabase.dart';
+import 'package:system_reports_app/ui/registerModule/user_privileges.dart';
 
-import '../../data/network/firebase_database.dart';
+import '../../data/network/firebase_authentication.dart';
 
 class SignUpViewModel extends ChangeNotifier {
-  final FirebaseDatabase _auth = FirebaseDatabase();
+  final FirebaseAuthentication _auth = FirebaseAuthentication();
 
   bool isVisiblePassword = true;
   bool isVisibleConfirmPassword = true;
+  UserPrivileges userPrivileges = UserPrivileges.user;
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
   Future<String> signUpWithEmailAndPassword() async {
+    final name = nameController.text.toString().trim();
     final email = emailController.text.toString().trim();
     final password = passwordController.text.toString().trim();
     final confirmPassword = confirmPasswordController.text.toString().trim();
+    print(userPrivileges.name.toString());
+    if (name.isEmpty) {
+      return 'Name cannot be empty';
+    }
     if (email.isEmpty) {
       return 'Email cannot be empty';
     }
@@ -29,7 +38,13 @@ class SignUpViewModel extends ChangeNotifier {
         confirmPassword.isEmpty) {
       return 'Confirm password cannot be empty';
     }
-    return _auth.signUpWithEmailAndPassword(email, password);
+    UserDatabase user = UserDatabase(null, name, email, userPrivileges);
+    return _auth.signUpWithEmailAndPassword(user, password);
+  }
+
+  void changePrivileges(UserPrivileges privileges) {
+    userPrivileges = privileges;
+    notifyListeners();
   }
 
   void changeVisibilityPassword() {

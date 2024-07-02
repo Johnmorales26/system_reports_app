@@ -1,9 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:system_reports_app/data/network/firebase_database.dart';
+import 'package:system_reports_app/data/network/firebase_authentication.dart';
 
 class SignInViewModel extends ChangeNotifier {
-  final FirebaseDatabase _auth = FirebaseDatabase();
+  final FirebaseAuthentication _auth = FirebaseAuthentication();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
