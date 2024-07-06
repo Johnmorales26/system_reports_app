@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:system_reports_app/ui/reportModule/report_screen.dart';
 import 'package:system_reports_app/ui/sliderModule/slider_screen.dart';
 
 import '../homeModule/home_screen.dart';
@@ -25,7 +26,7 @@ class App extends StatelessWidget {
           SignInScreen.route: (context) => const SignInScreen(),
           SignUpScreen.route: (context) => const SignUpScreen(),
           HomeScreen.route: (context) => const HomeScreen(),
-          '/details': (context) => const SignInScreen(),
+          ReportScreen.route: (context) => const ReportScreen()
         });
   }
 

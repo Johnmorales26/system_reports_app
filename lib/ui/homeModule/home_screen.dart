@@ -8,6 +8,7 @@ import 'package:system_reports_app/ui/signInModule/sign_in_screen.dart';
 import 'package:system_reports_app/ui/style/dimens.dart';
 
 import '../appModule/assets.dart';
+import '../reportModule/report_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -196,27 +197,20 @@ class __AdminMenuState extends State<_AdminMenu> {
                 title: const Text('New Report'),
                 subtitle: const Text('Create a new report from scratch.'),
                 trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {
-                  // Action for creating a new report
-                },
+                onTap: () => Navigator.pushNamed(context, ReportScreen.route),
               ),
               ListTile(
                 leading: const Icon(Icons.computer_outlined),
                 title: const Text('Computer Report'),
                 subtitle: const Text('Create a report for a computer.'),
                 trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {
-                  // Action for creating a computer report
-                },
+                onTap: () => Navigator.pushNamed(context, ReportScreen.route),
               ),
               ListTile(
                 leading: const Icon(Icons.car_crash_outlined),
                 title: const Text('Vehicle Report'),
                 subtitle: const Text('Create a report for a vehicle.'),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {
-                  // Action for creating a vehicle report
-                },
+                onTap: () => Navigator.pushNamed(context, ReportScreen.route),
               ),
               ListTile(
                 leading: const Icon(Icons.money_outlined),
