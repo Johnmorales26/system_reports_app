@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:system_reports_app/data/local/task_entity.dart';
 import 'package:system_reports_app/ui/style/dimens.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:system_reports_app/utils/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../homeModule/home_view_model.dart';
 
@@ -30,7 +31,7 @@ class _ItemTaskState extends State<ItemTask> {
     Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT);
   }
 
-  Future<void> downloadFile(String url, HomeViewModel viewModel) async {
+  Future<void> downloadFile(String url, HomeViewModel viewModel, String typeFile) async {
     if (kIsWeb) {
       if (await canLaunch(url)) {
         await launch(url);
@@ -39,12 +40,13 @@ class _ItemTaskState extends State<ItemTask> {
       }
     } else {
       try {
-        String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+        String? selectedDirectory =
+            await FilePicker.platform.getDirectoryPath();
         if (selectedDirectory == null) {
           return;
         }
         // Llama a viewModel.downloadFile con el directorio seleccionado
-        if (await viewModel.downloadFile(context, url, selectedDirectory)) {
+        if (await viewModel.downloadFile(context, url, selectedDirectory, typeFile)) {
           showScaffoldMessage('File downloaded successfully');
         } else {
           showScaffoldMessage('Error downloading file');
@@ -59,6 +61,15 @@ class _ItemTaskState extends State<ItemTask> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
+  }
+
+  Future<void> _launchURL(String url) async {
+    print(url);
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'No se pudo abrir la URL: $url';
+    }
   }
 
   @override
@@ -82,11 +93,16 @@ class _ItemTaskState extends State<ItemTask> {
         const SizedBox(width: Dimens.commonPaddingMin),
         Column(children: [
           IconButton(
-              onPressed: () => downloadFile(taskEntity.url, viewModel),
+              onPressed: () => downloadFile(taskEntity.url, viewModel, Constants.FILE_DOCUMENT),
               icon: const Icon(Icons.download_outlined)),
           IconButton(
               onPressed: () => viewModel.deleteTask(taskEntity.id.toString()),
               icon: const Icon(Icons.delete_outline))
+        ]),
+        Column(children: [
+          IconButton(
+              onPressed: () =>  downloadFile(taskEntity.image, viewModel, Constants.FILE_IMAGE),
+              icon: const Icon(Icons.image))
         ])
       ])
     ]));

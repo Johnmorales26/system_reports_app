@@ -42,12 +42,17 @@ class FirebaseDatabase {
     });
   }
 
-  Future<bool> downloadFile(BuildContext context, String url, String selectedDirectory) async {
+  Future<bool> downloadFile(BuildContext context, String url, String selectedDirectory, String typeFile) async {
     bool downloadSuccess = false;
     try {
       final ref = FirebaseStorage.instance.refFromURL(url);
       final fileName = ref.name;
-      final filePath = '$selectedDirectory/$fileName${Constants.EXTENSION_PDF}';
+      var filePath = '';
+      if (typeFile == Constants.FILE_DOCUMENT) {
+        filePath = '$selectedDirectory/$fileName${Constants.EXTENSION_PDF}';
+      } else {
+        filePath = '$selectedDirectory/$fileName${Constants.EXTENSION_IMAGE}';
+      }
       final file = File(filePath);
       final downloadTask = ref.writeToFile(file);
       downloadTask.snapshotEvents.listen((TaskSnapshot snapshot) {

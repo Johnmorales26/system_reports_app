@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "660592426653",
-    "project_id": "system-reports-app",
-    "storage_bucket": "system-reports-app.appspot.com"
+    "project_number": "440780828537",
+    "project_id": "system-reports-app-bfb51",
+    "storage_bucket": "system-reports-app-bfb51.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:660592426653:android:2519f0c990b4c49cd51e74",
+        "mobilesdk_app_id": "1:440780828537:android:5b69fed1957f1876e0c9a8",
         "android_client_info": {
           "package_name": "com.example.system_reports_app"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBAuuTPMLebekuEaYhg9ZvGrizMavSXAM8"
+          "current_key": "AIzaSyDellpXmfIBpgNG0lovWP1IJZmJY7o69ss"
         }
       ],
       "services": {

@@ -33,8 +33,8 @@ class HomeViewModel extends ChangeNotifier {
     _auth.signOut();
   }
 
-  Future<bool> downloadFile(BuildContext context, String url, String selectedDirectory) {
-    return db.downloadFile(context, url, selectedDirectory);
+  Future<bool> downloadFile(BuildContext context, String url,
+      String selectedDirectory, String typeFile) {
+    return db.downloadFile(context, url, selectedDirectory, typeFile);
   }
-
 }
