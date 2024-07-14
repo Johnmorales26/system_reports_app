@@ -5,11 +5,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:system_reports_app/data/local/task_entity.dart';
 import 'package:system_reports_app/ui/style/dimens.dart';
 
+import '../../data/network/firebase_database.dart';
 import '../appModule/assets.dart';
 
 class ReportViewModel extends ChangeNotifier {
+  final firebaseDatabase = FirebaseDatabase();
+
   final TextEditingController referenceNumberController =
       TextEditingController(text: 'SIMP2024-001');
   final TextEditingController clientController =
@@ -30,7 +34,7 @@ class ReportViewModel extends ChangeNotifier {
 
   double get uploadProgress => _uploadProgress;
 
-  Future<void> generatePDF() async {
+  Future<bool> generatePDF() async {
     final pdf = pw.Document();
 
     final fontData = await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
@@ -88,7 +92,7 @@ class ReportViewModel extends ChangeNotifier {
     final memory = await getInternalStoragePath();
     final file = File('$memory/${referenceNumberController.text}');
     await file.writeAsBytes(await pdf.save());
-    await uploadPDF(file);
+    return await uploadPDF(file);
   }
 
   Future<String> getInternalStoragePath() async {
@@ -96,7 +100,8 @@ class ReportViewModel extends ChangeNotifier {
     return directory.path;
   }
 
-  Future<void> uploadPDF(File file) async {
+  Future<bool> uploadPDF(File file) async {
+    bool result = false;
     try {
       final storageRef = FirebaseStorage.instance
           .ref()
@@ -113,9 +118,17 @@ class ReportViewModel extends ChangeNotifier {
       await uploadTask.whenComplete(() async {
         String downloadURL = await storageRef.getDownloadURL();
         print('Archivo subido! URL de descarga: $downloadURL');
+        result = await saveInFirestore(downloadURL);
       });
     } catch (e) {
       print('Error al subir archivo: $e');
     }
+    return result;
+  }
+
+  Future<bool> saveInFirestore(String downloadURL) {
+    final taskEntity = TaskEntity(DateTime.now().millisecondsSinceEpoch,
+        referenceNumberController.text, downloadURL, false);
+    return firebaseDatabase.createTask(taskEntity);
   }
 }

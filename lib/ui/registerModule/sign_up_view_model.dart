@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:system_reports_app/data/local/UserDatabase.dart';
+import 'package:system_reports_app/data/local/user_database.dart';
 import 'package:system_reports_app/ui/registerModule/user_privileges.dart';
 
 import '../../data/network/firebase_authentication.dart';

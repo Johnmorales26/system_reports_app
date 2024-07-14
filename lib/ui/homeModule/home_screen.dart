@@ -1,12 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:system_reports_app/data/local/UserDatabase.dart';
+import 'package:system_reports_app/data/local/user_database.dart';
 import 'package:system_reports_app/ui/homeModule/home_view_model.dart';
 import 'package:system_reports_app/ui/registerModule/user_privileges.dart';
 import 'package:system_reports_app/ui/signInModule/sign_in_screen.dart';
 import 'package:system_reports_app/ui/style/dimens.dart';
+import 'package:system_reports_app/ui/widgets/item_task.dart';
 
+import '../../data/local/task_entity.dart';
 import '../appModule/assets.dart';
 import '../reportModule/report_screen.dart';
 
@@ -128,22 +131,22 @@ class _HomeScreen extends StatelessWidget {
     if (snapshot.privileges == UserPrivileges.admin) adminMenu = _AdminMenu();
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('System Reports'),
-        actions: [
-          IconButton(
-              onPressed: () {
-                provider.signOut();
-                Navigator.pushReplacementNamed(context, SignInScreen.route);
-              },
-              icon: const Icon(Icons.exit_to_app))
-        ],
-      ),
-      body: Padding(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text('System Reports'),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  provider.signOut();
+                  Navigator.pushReplacementNamed(context, SignInScreen.route);
+                },
+                icon: const Icon(Icons.exit_to_app))
+          ],
+        ),
+        body: Padding(
           padding: const EdgeInsets.all(Dimens.commonPaddingDefault),
-          child: Column(children: [adminMenu])),
-    );
+          child: Column(children: [adminMenu, _TaskList()]),
+        ));
   }
 }
 
@@ -170,14 +173,17 @@ class __AdminMenuState extends State<_AdminMenu> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Reports', style: Theme.of(context).textTheme.headlineLarge),
+                      Text('Reports',
+                          style: Theme.of(context).textTheme.headlineLarge),
                       IconButton(
                         onPressed: () {
                           setState(() {
                             showListTiles = !showListTiles; // Toggle visibility
                           });
                         },
-                        icon: Icon(showListTiles ? Icons.visibility : Icons.visibility_off),
+                        icon: Icon(showListTiles
+                            ? Icons.visibility
+                            : Icons.visibility_off),
                       ),
                     ],
                   ),
@@ -225,6 +231,65 @@ class __AdminMenuState extends State<_AdminMenu> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _TaskList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = Provider.of<HomeViewModel>(context);
+    return FutureBuilder<Stream<QuerySnapshot<Map<String, dynamic>>>>(
+      future: viewModel.getAllTask(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        final stream = snapshot.data;
+
+        if (stream == null) {
+          return const Center(child: Text('No data available'));
+        }
+
+        return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: stream,
+          builder: (context, streamSnapshot) {
+            if (streamSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (streamSnapshot.hasError) {
+              return Center(child: Text('Error: ${streamSnapshot.error}'));
+            }
+
+            final data = streamSnapshot.data;
+            final tasks = data?.docs
+                .map((doc) => TaskEntity.fromJson(doc.data()))
+                .toList() ??
+                [];
+
+            if (tasks.isEmpty) {
+              return const Center(child: Text('No tasks available'));
+            }
+
+            return Flexible(
+              fit: FlexFit.loose,
+              child: ListView.builder(
+                itemCount: tasks.length,
+                itemBuilder: (context, index) {
+                  final task = tasks[index];
+                  return ItemTask(taskEntity: task);
+                },
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
