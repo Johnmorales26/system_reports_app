@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:system_reports_app/ui/homeModule/home_screen.dart';
 import 'package:system_reports_app/ui/registerModule/sign_up_view_model.dart';
-import 'package:system_reports_app/ui/registerModule/user_privileges.dart';
 import 'package:system_reports_app/ui/signInModule/sign_in_screen.dart';
 
 import '../appModule/assets.dart';
@@ -32,19 +30,20 @@ class SignUpScreen extends StatelessWidget {
         ],
       );
     } else {
-      view = formForSignUp(context);
+      view = Center(child: formForSignUp(context));
     }
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(Dimens.commonPaddingDefault),
-        child: SingleChildScrollView(child: view),
+        child: Center(child: SingleChildScrollView(child: view)),
       ),
     );
   }
 
   Widget formForSignUp(BuildContext context) {
     final provider = Provider.of<SignUpViewModel>(context);
-    return Column(
+    return Center(
+        child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -99,7 +98,7 @@ class SignUpScreen extends StatelessWidget {
               ),
             ))
       ],
-    );
+    ));
   }
 }
 
@@ -114,27 +113,7 @@ class _FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<SignUpViewModel>(context);
-    UserPrivileges? userPrivileges = provider?.userPrivileges;
     return Column(children: [
-      SizedBox(
-          width: double.infinity,
-          child: SegmentedButton<UserPrivileges>(
-            segments: const <ButtonSegment<UserPrivileges>>[
-              ButtonSegment(
-                  value: UserPrivileges.user,
-                  label: Text('User'),
-                  icon: Icon(Icons.person)),
-              ButtonSegment(
-                  value: UserPrivileges.admin,
-                  label: Text('Admin'),
-                  icon: Icon(Icons.verified_user))
-            ],
-            selected: <UserPrivileges>{userPrivileges!},
-            onSelectionChanged: (Set<UserPrivileges> userPrivileges) {
-              provider?.changePrivileges(userPrivileges.first);
-            },
-          )),
-      const SizedBox(height: Dimens.commonPaddingDefault),
       TextField(
           controller: provider?.nameController,
           decoration: InputDecoration(

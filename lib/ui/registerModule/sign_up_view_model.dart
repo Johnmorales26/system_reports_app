@@ -9,7 +9,6 @@ class SignUpViewModel extends ChangeNotifier {
 
   bool isVisiblePassword = true;
   bool isVisibleConfirmPassword = true;
-  UserPrivileges userPrivileges = UserPrivileges.user;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -21,7 +20,6 @@ class SignUpViewModel extends ChangeNotifier {
     final email = emailController.text.toString().trim();
     final password = passwordController.text.toString().trim();
     final confirmPassword = confirmPasswordController.text.toString().trim();
-    print(userPrivileges.name.toString());
     if (name.isEmpty) {
       return 'Name cannot be empty';
     }
@@ -38,13 +36,8 @@ class SignUpViewModel extends ChangeNotifier {
         confirmPassword.isEmpty) {
       return 'Confirm password cannot be empty';
     }
-    UserDatabase user = UserDatabase(null, name, email, userPrivileges);
+    UserDatabase user = UserDatabase(null, name, email, UserPrivileges.user);
     return _auth.signUpWithEmailAndPassword(user, password);
-  }
-
-  void changePrivileges(UserPrivileges privileges) {
-    userPrivileges = privileges;
-    notifyListeners();
   }
 
   void changeVisibilityPassword() {
