@@ -1,9 +1,12 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:system_reports_app/ui/homeModule/home_screen.dart';
 import 'package:system_reports_app/ui/reportModule/report_view_model.dart';
 import 'package:system_reports_app/ui/style/dimens.dart';
+import '../appModule/assets.dart';
+import 'web_image_picker.dart' if (dart.library.io) 'mobile_image_picker.dart';
 
 class ReportScreen extends StatelessWidget {
   static const String route = '/ReportScreen';
@@ -14,13 +17,36 @@ class ReportScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = Provider.of<ReportViewModel>(context);
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    Widget view = Container();
+    if (screenWidth >= 600) {
+      view = Center(
+          child: Row(
+        children: [
+          Expanded(
+            child: Padding(
+                padding: const EdgeInsets.all(Dimens.commonPaddingDefault),
+                child: SingleChildScrollView(child: _Form())),
+          ),
+          Expanded(
+            child: Lottie.asset(Assets.documentAnim),
+          ),
+        ],
+      ));
+    } else {
+      view = Padding(
+          padding: const EdgeInsets.all(Dimens.commonPaddingDefault),
+          child: SingleChildScrollView(child: _Form()));
+    }
+
     Widget button = Container();
-    if (viewModel.selectedImage != null) {
+    if (viewModel.validateControllers()) {
       button = FloatingActionButton(
           onPressed: () async {
             var response = await viewModel.generatePDF();
             if (response) {
-              Navigator.pop(context);
+              viewModel.clearControllers();
+              Navigator.pushNamedAndRemoveUntil(context, HomeScreen.route, (route) => false);
             } else {
               Fluttertoast.showToast(
                 msg: 'Error al subir el archivo',
@@ -35,10 +61,13 @@ class ReportScreen extends StatelessWidget {
     }
 
     return Scaffold(
-        appBar: AppBar(title: const Text('Report'), centerTitle: true),
-        body: Padding(
-            padding: const EdgeInsets.all(Dimens.commonPaddingDefault),
-            child: SingleChildScrollView(child: _Form())),
+        appBar: AppBar(
+            title: const Text('Report'),
+            centerTitle: true,
+            leading: IconButton(
+                onPressed: () => Navigator.pushNamedAndRemoveUntil(context, HomeScreen.route, (Route<dynamic> route) => false),
+                icon: const Icon(Icons.arrow_back))),
+        body: view,
         floatingActionButton: button);
   }
 }
@@ -49,12 +78,16 @@ class _Form extends StatelessWidget {
     final provider = Provider.of<ReportViewModel>(context);
 
     Widget isSelectedImage = Container();
-    if (provider.selectedImage == null) {
-      isSelectedImage = IconButton(
-          onPressed: () => provider.getImageFromGallery(context),
+    if (provider.urlController.text.isEmpty) {
+      isSelectedImage = FloatingActionButton.extended(
+          onPressed: () async {
+            var result = await getImageFromGallery(context, provider);
+            provider.updateSelectedImage(result);
+          },
+          label: const Text('Subir Imagen'),
           icon: const Icon(Icons.add_a_photo_outlined));
     } else {
-      if (provider.selectedImage != null) _ImagePreview(picture: provider.selectedImage!);
+      _ImagePreview(picture: provider.urlController.text);
     }
 
     return Column(children: [
@@ -124,6 +157,16 @@ class _Form extends StatelessWidget {
               labelText: 'Observations',
               hintText: 'Enter your observations',
               prefixIcon: const Icon(Icons.notes),
+              filled: true,
+              fillColor: Colors.grey[200]),
+          keyboardType: TextInputType.text),
+      const SizedBox(height: Dimens.commonPaddingMin),
+      TextField(
+          controller: provider.urlController,
+          decoration: InputDecoration(
+              labelText: 'Url Image',
+              enabled: false,
+              prefixIcon: const Icon(Icons.file_copy_outlined),
               filled: true,
               fillColor: Colors.grey[200]),
           keyboardType: TextInputType.text),

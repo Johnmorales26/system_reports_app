@@ -1,6 +1,7 @@
 class Assets {
 
   static String loginAnim = 'assets/anim/login.json';
+  static String documentAnim = 'assets/anim/document.json';
   static String imgSliderOne = 'assets/images/slider_v1.svg';
   static String imgSliderTwo = 'assets/images/slider_v2.svg';
   static String imgSliderThree = 'assets/images/slider_v3.svg';

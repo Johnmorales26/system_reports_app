@@ -2,14 +2,15 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:system_reports_app/data/local/task_entity.dart';
 import 'package:system_reports_app/ui/style/dimens.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'web_image_picker.dart' if (dart.library.io) 'mobile_image_picker.dart';
 import '../../data/network/firebase_database.dart';
 import '../appModule/assets.dart';
 
@@ -25,10 +26,15 @@ class ReportViewModel extends ChangeNotifier {
   final TextEditingController activityPerformedController =
       TextEditingController();
   final TextEditingController observationsController = TextEditingController();
-  String? selectedImage;
+  final TextEditingController urlController = TextEditingController();
   double _uploadProgress = 0.0;
 
   double get uploadProgress => _uploadProgress;
+
+  void updateSelectedImage(String url) {
+    urlController.text = url;
+    notifyListeners();
+  }
 
   Future<bool> generatePDF() async {
     final pdf = pw.Document();
@@ -85,85 +91,14 @@ class ReportViewModel extends ChangeNotifier {
       ),
     );
 
-    final memory = await getInternalStoragePath();
-    final file = File('$memory/${referenceNumberController.text}');
-    await file.writeAsBytes(await pdf.save());
-    return await uploadFile(file);
-  }
-
-  Future<String> getInternalStoragePath() async {
-    final Directory directory = await getApplicationDocumentsDirectory();
-    return directory.path;
-  }
-
-  Future<bool> uploadFile(File file) async {
-    bool result = false;
-    try {
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child('pdfs/${file.path.split('/').last}');
-      final uploadTask = storageRef.putFile(file);
-
-      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-        final progress = snapshot.bytesTransferred / snapshot.totalBytes;
-        _uploadProgress = progress;
-        print('Proceso de subida de PDF: ${uploadProgress}');
-        notifyListeners();
-      });
-
-      await uploadTask.whenComplete(() async {
-        String downloadURL = await storageRef.getDownloadURL();
-        print('Archivo subido! URL de descarga: $downloadURL');
-        result = await saveInFirestore(downloadURL);
-      });
-    } catch (e) {
-      print('Error al subir archivo: $e');
-    }
-    return result;
-  }
-
-  Future<void> uploadImage(File file) async {
-    try {
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child('images/${file.path.split('/').last}');
-      final uploadTask = storageRef.putFile(file);
-
-      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-        final progress = snapshot.bytesTransferred / snapshot.totalBytes;
-        _uploadProgress = progress;
-        print('Proceso de subida de PDF: $_uploadProgress');
-        notifyListeners();
-      });
-
-      await uploadTask.whenComplete(() async {
-        selectedImage = await storageRef.getDownloadURL();
-        print('Archivo subido! URL de descarga: $selectedImage');
-        notifyListeners();
-      });
-    } catch (e) {
-      print('Error al subir archivo: $e');
-      // Puedes agregar más detalles sobre el error específico aquí, dependiendo de tus necesidades.
-    }
+    return generateFile(pdf, referenceNumberController.text, this);
   }
 
   Future<bool> saveInFirestore(String downloadURL) {
     final taskEntity = TaskEntity(DateTime.now().millisecondsSinceEpoch,
         referenceNumberController.text, downloadURL, false,
-        image: selectedImage!);
+        image: urlController.text);
     return firebaseDatabase.createTask(taskEntity);
-  }
-
-  Future<void> getImageFromGallery(BuildContext context) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    XFile? xfilePick = pickedFile;
-    if (xfilePick != null) {
-      uploadImage(File(pickedFile!.path));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
-          const SnackBar(content: Text('Nothing is selected')));
-    }
   }
 
   Future<void> launchURL(String url) async {
@@ -172,5 +107,30 @@ class ReportViewModel extends ChangeNotifier {
     } else {
       throw 'No se pudo abrir la URL: $url';
     }
+  }
+
+  bool validateControllers() {
+    if (referenceNumberController.text.trim().isEmpty ||
+        clientController.text.trim().isEmpty ||
+        locationController.text.trim().isEmpty ||
+        nameFSEController.text.trim().isEmpty ||
+        customManagerController.text.trim().isEmpty ||
+        activityPerformedController.text.trim().isEmpty ||
+        observationsController.text.trim().isEmpty ||
+        urlController.text.trim().isEmpty) {
+      return false;
+    }
+    return true;
+  }
+
+  void clearControllers() {
+    referenceNumberController.clear();
+    clientController.clear();
+    locationController.clear();
+    nameFSEController.clear();
+    customManagerController.clear();
+    activityPerformedController.clear();
+    observationsController.clear();
+    urlController.clear();
   }
 }
