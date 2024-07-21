@@ -44,6 +44,7 @@ class FirebaseDatabase {
 
   Future<bool> downloadFile(BuildContext context, String url, String selectedDirectory, String typeFile) async {
     bool downloadSuccess = false;
+    print(url);
     try {
       final ref = FirebaseStorage.instance.refFromURL(url);
       final fileName = ref.name;
@@ -62,6 +63,7 @@ class FirebaseDatabase {
         downloadSuccess = true;
       });
     } catch (e) {
+      print('----> $e');
       downloadSuccess = false;
     }
     return downloadSuccess;

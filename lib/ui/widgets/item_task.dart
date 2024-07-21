@@ -63,15 +63,6 @@ class _ItemTaskState extends State<ItemTask> {
     );
   }
 
-  Future<void> _launchURL(String url) async {
-    print(url);
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'No se pudo abrir la URL: $url';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<HomeViewModel>(context);
