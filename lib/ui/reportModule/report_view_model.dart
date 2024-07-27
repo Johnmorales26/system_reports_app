@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:signature/signature.dart';
 import 'package:system_reports_app/data/local/task_entity.dart';
 import 'package:system_reports_app/ui/style/dimens.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,6 +25,11 @@ class ReportViewModel extends ChangeNotifier {
       TextEditingController();
   final TextEditingController observationsController = TextEditingController();
   final TextEditingController urlController = TextEditingController();
+  final SignatureController signatureController = SignatureController(
+    penStrokeWidth: 3,
+    penColor: Colors.black,
+    exportBackgroundColor: Colors.white,
+  );
   double _uploadProgress = 0.0;
 
   double get uploadProgress => _uploadProgress;
@@ -36,7 +39,12 @@ class ReportViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> generatePDF() async {
+  Future<Uint8List> fileToUint8List(File file) async {
+    Uint8List bytes = await file.readAsBytes();
+    return bytes;
+  }
+
+  Future<bool> generatePDF(File signature) async {
     final pdf = pw.Document();
 
     final fontData = await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
@@ -57,6 +65,7 @@ class ReportViewModel extends ChangeNotifier {
 
     final logo = await rootBundle.load(Assets.imgSilbec);
     final imageBytes = logo.buffer.asUint8List();
+    final signatureUint = await fileToUint8List(signature);
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.a4,
@@ -85,7 +94,18 @@ class ReportViewModel extends ChangeNotifier {
                 buildTableRow('Observaciones:',
                     observationsController.text.toString().trim(), ttf),
               ],
-            )
+            ),
+            pw.Column(
+                mainAxisAlignment: pw.MainAxisAlignment.center,
+                crossAxisAlignment: pw.CrossAxisAlignment.center,
+                children: [
+                  pw.Image(pw.MemoryImage(signatureUint),
+                      width: 150, height: 100),
+                  pw.Padding(
+                      padding: const pw.EdgeInsets.symmetric(vertical: 8),
+                      child: pw.Divider()),
+                  pw.Text('Firma')
+                ])
           ]);
         },
       ),

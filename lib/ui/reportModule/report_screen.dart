@@ -1,22 +1,37 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:signature/signature.dart';
 import 'package:system_reports_app/ui/homeModule/home_screen.dart';
 import 'package:system_reports_app/ui/reportModule/report_view_model.dart';
 import 'package:system_reports_app/ui/style/dimens.dart';
 import '../appModule/assets.dart';
 import 'web_image_picker.dart' if (dart.library.io) 'mobile_image_picker.dart';
+import 'package:image/image.dart' as img;
 
 class ReportScreen extends StatelessWidget {
   static const String route = '/ReportScreen';
 
   const ReportScreen({super.key});
 
+  Future<File> _getSignatureFile(ReportViewModel viewModel) async {
+    final imageBytes = await viewModel.signatureController.toPngBytes();
+    if (imageBytes != null) {
+      final image = img.decodeImage(imageBytes)!;
+      final tempDir = Directory.systemTemp;
+      final file = File('${tempDir.path}/signature.png');
+      await file.writeAsBytes(img.encodePng(image));
+      return file;
+    }
+    throw Exception('Failed to convert signature to image file');
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<ReportViewModel>(context);
-
     final screenWidth = MediaQuery.of(context).size.width;
     Widget view = Container();
     if (screenWidth >= 600) {
@@ -25,7 +40,7 @@ class ReportScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Padding(
-                padding: const EdgeInsets.all(Dimens.commonPaddingDefault),
+                padding: const EdgeInsets.symmetric(horizontal: Dimens.commonPaddingDefault),
                 child: SingleChildScrollView(child: _Form())),
           ),
           Expanded(
@@ -35,7 +50,7 @@ class ReportScreen extends StatelessWidget {
       ));
     } else {
       view = Padding(
-          padding: const EdgeInsets.all(Dimens.commonPaddingDefault),
+          padding: const EdgeInsets.symmetric(horizontal: Dimens.commonPaddingDefault),
           child: SingleChildScrollView(child: _Form()));
     }
 
@@ -43,7 +58,8 @@ class ReportScreen extends StatelessWidget {
     if (viewModel.validateControllers()) {
       button = FloatingActionButton(
           onPressed: () async {
-            var response = await viewModel.generatePDF();
+            final signature = await _getSignatureFile(viewModel);
+            var response = await viewModel.generatePDF(signature);
             if (response) {
               viewModel.clearControllers();
               Navigator.pushNamedAndRemoveUntil(context, HomeScreen.route, (route) => false);
@@ -73,6 +89,7 @@ class ReportScreen extends StatelessWidget {
 }
 
 class _Form extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ReportViewModel>(context);
@@ -170,6 +187,12 @@ class _Form extends StatelessWidget {
               filled: true,
               fillColor: Colors.grey[200]),
           keyboardType: TextInputType.text),
+      const SizedBox(height: Dimens.commonPaddingMin),
+      Signature(
+        controller: provider.signatureController,
+        height: 150,
+        backgroundColor: Colors.grey[200]!,
+      ),
       const SizedBox(height: Dimens.commonPaddingMin),
       isSelectedImage
     ]);
