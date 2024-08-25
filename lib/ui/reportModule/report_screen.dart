@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
@@ -40,7 +41,8 @@ class ReportScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Dimens.commonPaddingDefault),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.commonPaddingDefault),
                 child: SingleChildScrollView(child: _Form())),
           ),
           Expanded(
@@ -50,7 +52,8 @@ class ReportScreen extends StatelessWidget {
       ));
     } else {
       view = Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Dimens.commonPaddingDefault),
+          padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.commonPaddingDefault),
           child: SingleChildScrollView(child: _Form()));
     }
 
@@ -58,17 +61,27 @@ class ReportScreen extends StatelessWidget {
     if (viewModel.validateControllers()) {
       button = FloatingActionButton(
           onPressed: () async {
-            final signature = await _getSignatureFile(viewModel);
-            var response = await viewModel.generatePDF(signature);
-            if (response) {
-              viewModel.clearControllers();
-              Navigator.pushNamedAndRemoveUntil(context, HomeScreen.route, (route) => false);
-            } else {
+            if (kIsWeb) {
               Fluttertoast.showToast(
-                msg: 'Error al subir el archivo',
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
-              );
+                  msg: "Esta opción no está disponible en la web.",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM);
+                  Navigator.pushNamedAndRemoveUntil(
+                    context, HomeScreen.route, (Route<dynamic> route) => false);
+            } else {
+              final signature = await _getSignatureFile(viewModel);
+              var response = await viewModel.generatePDF(signature);
+              if (response) {
+                viewModel.clearControllers();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, HomeScreen.route, (route) => false);
+              } else {
+                Fluttertoast.showToast(
+                  msg: 'Error al subir el archivo',
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                );
+              }
             }
           },
           child: const Icon(Icons.file_open));
@@ -81,7 +94,8 @@ class ReportScreen extends StatelessWidget {
             title: const Text('Report'),
             centerTitle: true,
             leading: IconButton(
-                onPressed: () => Navigator.pushNamedAndRemoveUntil(context, HomeScreen.route, (Route<dynamic> route) => false),
+                onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                    context, HomeScreen.route, (Route<dynamic> route) => false),
                 icon: const Icon(Icons.arrow_back))),
         body: view,
         floatingActionButton: button);
@@ -89,7 +103,6 @@ class ReportScreen extends StatelessWidget {
 }
 
 class _Form extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ReportViewModel>(context);
@@ -111,81 +124,81 @@ class _Form extends StatelessWidget {
       TextField(
           controller: provider.referenceNumberController,
           decoration: const InputDecoration(
-              labelText: 'Reference Number',
-              hintText: 'Enter your reference number',
-              prefixIcon: Icon(Icons.code),
-              filled: true,
-              ),
+            labelText: 'Reference Number',
+            hintText: 'Enter your reference number',
+            prefixIcon: Icon(Icons.code),
+            filled: true,
+          ),
           keyboardType: TextInputType.text),
       const SizedBox(height: Dimens.commonPaddingMin),
       TextField(
           controller: provider.clientController,
           decoration: const InputDecoration(
-              labelText: 'Client',
-              hintText: 'Enter your client name',
-              prefixIcon: Icon(Icons.person),
-              filled: true,
-              ),
+            labelText: 'Client',
+            hintText: 'Enter your client name',
+            prefixIcon: Icon(Icons.person),
+            filled: true,
+          ),
           keyboardType: TextInputType.name),
       const SizedBox(height: Dimens.commonPaddingMin),
       TextField(
           controller: provider.locationController,
           decoration: const InputDecoration(
-              labelText: 'Location',
-              hintText: 'Enter your location',
-              prefixIcon: Icon(Icons.location_on),
-              filled: true,
-              ),
+            labelText: 'Location',
+            hintText: 'Enter your location',
+            prefixIcon: Icon(Icons.location_on),
+            filled: true,
+          ),
           keyboardType: TextInputType.streetAddress),
       const SizedBox(height: Dimens.commonPaddingMin),
       TextField(
           controller: provider.nameFSEController,
           decoration: const InputDecoration(
-              labelText: 'Name FSE',
-              hintText: 'Enter your name FSE',
-              prefixIcon: Icon(Icons.person_2),
-              filled: true,
-              ),
+            labelText: 'Name FSE',
+            hintText: 'Enter your name FSE',
+            prefixIcon: Icon(Icons.person_2),
+            filled: true,
+          ),
           keyboardType: TextInputType.name),
       const SizedBox(height: Dimens.commonPaddingMin),
       TextField(
           controller: provider.customManagerController,
           decoration: const InputDecoration(
-              labelText: 'Custom Manager',
-              hintText: 'Enter your custom manager',
-              prefixIcon: Icon(Icons.person),
-              filled: true,
-              ),
+            labelText: 'Custom Manager',
+            hintText: 'Enter your custom manager',
+            prefixIcon: Icon(Icons.person),
+            filled: true,
+          ),
           keyboardType: TextInputType.name),
       const SizedBox(height: Dimens.commonPaddingMin),
       TextField(
           controller: provider.activityPerformedController,
           decoration: const InputDecoration(
-              labelText: 'Activity Performed',
-              hintText: 'Enter your activity performed',
-              prefixIcon: Icon(Icons.person),
-              filled: true,
-              ),
+            labelText: 'Activity Performed',
+            hintText: 'Enter your activity performed',
+            prefixIcon: Icon(Icons.person),
+            filled: true,
+          ),
           keyboardType: TextInputType.text),
       const SizedBox(height: Dimens.commonPaddingMin),
       TextField(
           controller: provider.observationsController,
           decoration: const InputDecoration(
-              labelText: 'Observations',
-              hintText: 'Enter your observations',
-              prefixIcon: Icon(Icons.notes),
-              filled: true,
-              ),
+            labelText: 'Observations',
+            hintText: 'Enter your observations',
+            prefixIcon: Icon(Icons.notes),
+            filled: true,
+          ),
           keyboardType: TextInputType.text),
       const SizedBox(height: Dimens.commonPaddingMin),
       TextField(
           controller: provider.urlController,
           decoration: const InputDecoration(
-              labelText: 'Url Image',
-              enabled: false,
-              prefixIcon: Icon(Icons.file_copy_outlined),
-              filled: true,
-              ),
+            labelText: 'Url Image',
+            enabled: false,
+            prefixIcon: Icon(Icons.file_copy_outlined),
+            filled: true,
+          ),
           keyboardType: TextInputType.text),
       const SizedBox(height: Dimens.commonPaddingMin),
       Signature(
