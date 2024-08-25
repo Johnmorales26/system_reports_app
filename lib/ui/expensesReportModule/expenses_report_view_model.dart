@@ -298,7 +298,7 @@ class ExpensesReportViewModel extends ChangeNotifier {
                   '\$${expenses.map((expense) => expense.amount).reduce((prev, element) => prev + element).toString()}',
                   ttf),
               pdfGenerator.buildTableRow(
-                  'Anticipo', '\$${advanceController.text.toString()}', ttf)
+                  'Anticipo', '\$${advanceController.text}', ttf)
             ])
           ]);
         }));
