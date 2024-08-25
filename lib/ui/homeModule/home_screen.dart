@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:system_reports_app/data/local/user_database.dart';
+import 'package:system_reports_app/ui/expensesReportModule/expenses_report_screen.dart';
 import 'package:system_reports_app/ui/homeModule/home_view_model.dart';
 import 'package:system_reports_app/ui/registerModule/user_privileges.dart';
 import 'package:system_reports_app/ui/signInModule/sign_in_screen.dart';
@@ -223,9 +224,7 @@ class __AdminMenuState extends State<_AdminMenu> {
                 title: const Text('Expense Report'),
                 subtitle: const Text('Create a report for expenses.'),
                 trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {
-                  // Action for creating an expense report
-                },
+                onTap: () => Navigator.pushNamed(context, ExpensesReportScreen.route),
               ),
             ],
           ],

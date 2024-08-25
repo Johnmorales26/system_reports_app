@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:system_reports_app/ui/expensesReportModule/expenses_report_screen.dart';
 import 'package:system_reports_app/ui/reportModule/report_screen.dart';
 import 'package:system_reports_app/ui/sliderModule/slider_screen.dart';
 
@@ -13,8 +14,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final brightness = View.of(context).platformDispatcher.platformBrightness;
-    TextTheme textTheme = createTextTheme(context, "Manrope", "Sora");
+    createTextTheme(context, "Manrope", "Sora");
     //MaterialTheme theme = MaterialTheme(textTheme);
     return MaterialApp(
         title: 'System Reports',
@@ -26,7 +26,8 @@ class App extends StatelessWidget {
           SignInScreen.route: (context) => const SignInScreen(),
           SignUpScreen.route: (context) => const SignUpScreen(),
           HomeScreen.route: (context) => const HomeScreen(),
-          ReportScreen.route: (context) => const ReportScreen()
+          ReportScreen.route: (context) => const ReportScreen(),
+          ExpensesReportScreen.route: (context) => const ExpensesReportScreen()
         });
   }
 

@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:system_reports_app/ui/appModule/assets.dart';
-import 'package:system_reports_app/ui/registerModule/sign_up_screen.dart';
 
 import '../signInModule/sign_in_screen.dart';
 import '../style/dimens.dart';
