@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:system_reports_app/ui/expensesReportModule/expenses_report_view_model.dart';
 import 'package:system_reports_app/ui/expensesReportModule/item_amounts.dart';
 import 'package:system_reports_app/ui/expensesReportModule/item_expense.dart';
+import 'package:toastification/toastification.dart';
 
 import '../style/dimens.dart';
 
@@ -47,10 +47,11 @@ class ExpensesReportScreen extends StatelessWidget {
 
   void showDetails(BuildContext context, ExpensesReportViewModel viewModel) {
     if (viewModel.expenses.isEmpty) {
-      Fluttertoast.showToast(
-        msg: 'Please add expenses',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
+      toastification.show(
+        context: context,
+        title: const Text('Please add expenses'),
+        autoCloseDuration: const Duration(seconds: 5),
+        type: ToastificationType.info
       );
     } else {
       final totalBilled = viewModel.expenses.fold(
@@ -283,10 +284,12 @@ class _Expenses extends StatelessWidget {
                     onPressed: () {
                       final response = viewModel.addExpense();
                       if (!response) {
-                        Fluttertoast.showToast(
-                            msg: 'Please fill all fields',
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM);
+                        toastification.show(
+                            context: context,
+                            title: const Text('Please fill all fields'),
+                            autoCloseDuration: const Duration(seconds: 5),
+                            type: ToastificationType.info
+                        );
                       }
                     },
                     child: const Text('Add Expense')),

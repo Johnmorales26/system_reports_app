@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:system_reports_app/ui/homeModule/home_screen.dart';
 import 'package:system_reports_app/ui/registerModule/sign_up_view_model.dart';
 import 'package:system_reports_app/ui/signInModule/sign_in_screen.dart';
+import 'package:toastification/toastification.dart';
 
 import '../appModule/assets.dart';
 import '../style/dimens.dart';
@@ -71,12 +71,12 @@ class SignUpScreen extends StatelessWidget {
                                 Navigator.pushReplacementNamed(
                                     context, response);
                               } else {
-                                Fluttertoast.showToast(
-                                    msg: response,
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white);
+                                toastification.show(
+                                    context: context,
+                                    title: Text(response),
+                                    autoCloseDuration: const Duration(seconds: 5),
+                                    type: ToastificationType.error
+                                );
                               }
                             },
                             child: const Text('Sign Up'))),

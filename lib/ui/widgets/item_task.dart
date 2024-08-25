@@ -1,6 +1,5 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:system_reports_app/data/local/task_entity.dart';
 import 'package:system_reports_app/ui/style/dimens.dart';
@@ -25,10 +24,6 @@ class _ItemTaskState extends State<ItemTask> {
   void initState() {
     super.initState();
     taskEntity = widget.taskEntity;
-  }
-
-  void showToast(String message) {
-    Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT);
   }
 
   Future<void> downloadFile(String url, HomeViewModel viewModel, String typeFile) async {

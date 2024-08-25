@@ -44,7 +44,6 @@ dependencies:
   provider: ^6.1.2
   firebase_core: ^3.1.0
   firebase_auth: ^5.1.0
-  fluttertoast: ^8.2.6
   google_fonts: ^6.2.1
   lottie: ^3.1.2
   carousel_slider: ^5.0.0
@@ -59,6 +58,7 @@ dependencies:
   permission_handler: ^11.3.1
   signature: ^5.5.0
   flutter_launcher_icons: ^0.13.1
+  toastification: ^2.1.0
 
 dev_dependencies:
   flutter_test:

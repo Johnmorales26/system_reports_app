@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:signature/signature.dart';
 import 'package:system_reports_app/ui/homeModule/home_screen.dart';
 import 'package:system_reports_app/ui/reportModule/report_view_model.dart';
 import 'package:system_reports_app/ui/style/dimens.dart';
+import 'package:toastification/toastification.dart';
 import '../appModule/assets.dart';
 import 'web_image_picker.dart' if (dart.library.io) 'mobile_image_picker.dart';
 import 'package:image/image.dart' as img;
@@ -62,10 +62,12 @@ class ReportScreen extends StatelessWidget {
       button = FloatingActionButton(
           onPressed: () async {
             if (kIsWeb) {
-              Fluttertoast.showToast(
-                  msg: "Esta opción no está disponible en la web.",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM);
+              toastification.show(
+                  context: context,
+                  title: const Text('Esta opción no está disponible en la web.'),
+                  autoCloseDuration: const Duration(seconds: 5),
+                  type: ToastificationType.info
+              );
                   Navigator.pushNamedAndRemoveUntil(
                     context, HomeScreen.route, (Route<dynamic> route) => false);
             } else {
@@ -76,10 +78,11 @@ class ReportScreen extends StatelessWidget {
                 Navigator.pushNamedAndRemoveUntil(
                     context, HomeScreen.route, (route) => false);
               } else {
-                Fluttertoast.showToast(
-                  msg: 'Error al subir el archivo',
-                  toastLength: Toast.LENGTH_LONG,
-                  gravity: ToastGravity.BOTTOM,
+                toastification.show(
+                    context: context,
+                    title: const Text('Error al subir el archivo'),
+                    autoCloseDuration: const Duration(seconds: 5),
+                    type: ToastificationType.error
                 );
               }
             }
