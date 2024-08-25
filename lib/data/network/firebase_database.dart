@@ -57,7 +57,7 @@ class FirebaseDatabase {
       final file = File(filePath);
       final downloadTask = ref.writeToFile(file);
       downloadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-        double progress = snapshot.bytesTransferred / snapshot.totalBytes.toDouble();
+        //double progress = snapshot.bytesTransferred / snapshot.totalBytes.toDouble();
       });
       await downloadTask.whenComplete(() async {
         downloadSuccess = true;

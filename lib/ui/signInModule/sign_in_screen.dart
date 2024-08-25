@@ -140,12 +140,11 @@ class _FormState extends State<_Form> {
       children: [
         TextField(
             controller: provider?.emailController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelText: 'Email',
                 hintText: 'Enter your email',
-                prefixIcon: const Icon(Icons.email),
-                filled: true,
-                fillColor: Colors.grey[200]),
+                prefixIcon: Icon(Icons.email),
+                filled: true,),
             keyboardType: TextInputType.emailAddress),
         const SizedBox(height: Dimens.commonPaddingDefault),
         TextField(
@@ -160,8 +159,7 @@ class _FormState extends State<_Form> {
                     ? Icons.visibility
                     : Icons.visibility_off),
               ),
-              filled: true,
-              fillColor: Colors.grey[200]),
+              filled: true),
           obscureText: provider!.isVisiblePassword,
         )
       ],

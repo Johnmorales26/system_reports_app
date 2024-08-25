@@ -94,7 +94,7 @@ class ExpensesReportViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Future<bool>> generateDocument() async {
+  Future<bool> generateDocument() async {
     final pdf = pdfGenerator.createDocument();
     final ttf = await pdfGenerator.getFontData();
 
@@ -302,7 +302,7 @@ class ExpensesReportViewModel extends ChangeNotifier {
             ])
           ]);
         }));
-    return generateFile(pdf, referenceController.text, this);
+    return await generateFile(pdf, referenceController.text, this);
   }
 
   Future<bool> saveInFirestore(String downloadURL) {

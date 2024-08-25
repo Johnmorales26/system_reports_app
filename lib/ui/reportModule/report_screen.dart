@@ -110,88 +110,87 @@ class _Form extends StatelessWidget {
     return Column(children: [
       TextField(
           controller: provider.referenceNumberController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               labelText: 'Reference Number',
               hintText: 'Enter your reference number',
-              prefixIcon: const Icon(Icons.code),
+              prefixIcon: Icon(Icons.code),
               filled: true,
-              fillColor: Colors.grey[200]),
+              ),
           keyboardType: TextInputType.text),
       const SizedBox(height: Dimens.commonPaddingMin),
       TextField(
           controller: provider.clientController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               labelText: 'Client',
               hintText: 'Enter your client name',
-              prefixIcon: const Icon(Icons.person),
+              prefixIcon: Icon(Icons.person),
               filled: true,
-              fillColor: Colors.grey[200]),
+              ),
           keyboardType: TextInputType.name),
       const SizedBox(height: Dimens.commonPaddingMin),
       TextField(
           controller: provider.locationController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               labelText: 'Location',
               hintText: 'Enter your location',
-              prefixIcon: const Icon(Icons.location_on),
+              prefixIcon: Icon(Icons.location_on),
               filled: true,
-              fillColor: Colors.grey[200]),
+              ),
           keyboardType: TextInputType.streetAddress),
       const SizedBox(height: Dimens.commonPaddingMin),
       TextField(
           controller: provider.nameFSEController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               labelText: 'Name FSE',
               hintText: 'Enter your name FSE',
-              prefixIcon: const Icon(Icons.person_2),
+              prefixIcon: Icon(Icons.person_2),
               filled: true,
-              fillColor: Colors.grey[200]),
+              ),
           keyboardType: TextInputType.name),
       const SizedBox(height: Dimens.commonPaddingMin),
       TextField(
           controller: provider.customManagerController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               labelText: 'Custom Manager',
               hintText: 'Enter your custom manager',
-              prefixIcon: const Icon(Icons.person),
+              prefixIcon: Icon(Icons.person),
               filled: true,
-              fillColor: Colors.grey[200]),
+              ),
           keyboardType: TextInputType.name),
       const SizedBox(height: Dimens.commonPaddingMin),
       TextField(
           controller: provider.activityPerformedController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               labelText: 'Activity Performed',
               hintText: 'Enter your activity performed',
-              prefixIcon: const Icon(Icons.person),
+              prefixIcon: Icon(Icons.person),
               filled: true,
-              fillColor: Colors.grey[200]),
+              ),
           keyboardType: TextInputType.text),
       const SizedBox(height: Dimens.commonPaddingMin),
       TextField(
           controller: provider.observationsController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               labelText: 'Observations',
               hintText: 'Enter your observations',
-              prefixIcon: const Icon(Icons.notes),
+              prefixIcon: Icon(Icons.notes),
               filled: true,
-              fillColor: Colors.grey[200]),
+              ),
           keyboardType: TextInputType.text),
       const SizedBox(height: Dimens.commonPaddingMin),
       TextField(
           controller: provider.urlController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               labelText: 'Url Image',
               enabled: false,
-              prefixIcon: const Icon(Icons.file_copy_outlined),
+              prefixIcon: Icon(Icons.file_copy_outlined),
               filled: true,
-              fillColor: Colors.grey[200]),
+              ),
           keyboardType: TextInputType.text),
       const SizedBox(height: Dimens.commonPaddingMin),
       Signature(
         controller: provider.signatureController,
         height: 150,
-        backgroundColor: Colors.grey[200]!,
       ),
       const SizedBox(height: Dimens.commonPaddingMin),
       isSelectedImage

@@ -322,7 +322,7 @@ class _ListExpenses extends StatelessWidget {
             child: _buildExpensesList(viewModel),
           ),
           const SizedBox(height: 16.0),
-          _buildActions(viewModel),
+          _buildActions(viewModel, context),
         ],
       ),
     );
@@ -405,7 +405,7 @@ class _ListExpenses extends StatelessWidget {
     );
   }
 
-  Widget _buildActions(ExpensesReportViewModel viewModel) {
+  Widget _buildActions(ExpensesReportViewModel viewModel, BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -418,8 +418,11 @@ class _ListExpenses extends StatelessWidget {
           ),
         ),
         ElevatedButton.icon(
-          onPressed: () {
-            viewModel.generateDocument();
+          onPressed: () async {
+            final response = await viewModel.generateDocument();
+            if (response) {
+              Navigator.pop(context);
+            }
           },
           icon: const Icon(Icons.cloud_upload),
           label: const Text('Upload'),

@@ -36,8 +36,8 @@ class FirebaseAuthentication {
   Future<String> signInWithEmailAndPassword(
       String email, String password) async {
     try {
-      final credential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
+      //final credential = await FirebaseAuth.instance
+          //.signInWithEmailAndPassword(email: email, password: password);
       return HomeScreen.route;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {

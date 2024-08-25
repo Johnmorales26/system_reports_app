@@ -8,7 +8,6 @@ import 'package:system_reports_app/ui/style/colors.dart';
 import '../homeModule/home_screen.dart';
 import '../signInModule/sign_in_screen.dart';
 import '../registerModule/sign_up_screen.dart';
-import '../style/text.dart';
 
 class App extends StatelessWidget {
   const App({super.key});

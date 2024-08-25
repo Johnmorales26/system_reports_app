@@ -116,55 +116,55 @@ class _FormState extends State<_Form> {
     return Column(children: [
       TextField(
           controller: provider?.nameController,
-          decoration: InputDecoration(
-              labelText: 'Name',
-              hintText: 'Enter your fullname',
-              prefixIcon: const Icon(Icons.person),
-              filled: true,
-              fillColor: Colors.grey[200]),
+          decoration: const InputDecoration(
+            labelText: 'Name',
+            hintText: 'Enter your fullname',
+            prefixIcon: Icon(Icons.person),
+            filled: true,
+          ),
           keyboardType: TextInputType.name),
       const SizedBox(height: Dimens.commonPaddingDefault),
       TextField(
           controller: provider?.emailController,
-          decoration: InputDecoration(
-              labelText: 'Email',
-              hintText: 'Enter your email',
-              prefixIcon: const Icon(Icons.email),
-              filled: true,
-              fillColor: Colors.grey[200]),
+          decoration: const InputDecoration(
+            labelText: 'Email',
+            hintText: 'Enter your email',
+            prefixIcon: Icon(Icons.email),
+            filled: true,
+          ),
           keyboardType: TextInputType.emailAddress),
       const SizedBox(height: Dimens.commonPaddingDefault),
       TextField(
         controller: provider?.passwordController,
         decoration: InputDecoration(
-            labelText: 'Password',
-            hintText: 'Enter your password',
-            prefixIcon: const Icon(Icons.lock),
-            suffixIcon: GestureDetector(
-              onTap: () => provider?.changeVisibilityPassword(),
-              child: Icon(provider!.isVisiblePassword
-                  ? Icons.visibility
-                  : Icons.visibility_off),
-            ),
-            filled: true,
-            fillColor: Colors.grey[200]),
+          labelText: 'Password',
+          hintText: 'Enter your password',
+          prefixIcon: const Icon(Icons.lock),
+          suffixIcon: GestureDetector(
+            onTap: () => provider?.changeVisibilityPassword(),
+            child: Icon(provider!.isVisiblePassword
+                ? Icons.visibility
+                : Icons.visibility_off),
+          ),
+          filled: true,
+        ),
         obscureText: provider!.isVisiblePassword,
       ),
       const SizedBox(height: Dimens.commonPaddingDefault),
       TextField(
         controller: provider?.confirmPasswordController,
         decoration: InputDecoration(
-            labelText: 'Confirm Password',
-            hintText: 'Enter your password',
-            prefixIcon: const Icon(Icons.lock),
-            suffixIcon: GestureDetector(
-              onTap: () => provider?.changeVisibilityConfirmPassword(),
-              child: Icon(provider!.isVisiblePassword
-                  ? Icons.visibility
-                  : Icons.visibility_off),
-            ),
-            filled: true,
-            fillColor: Colors.grey[200]),
+          labelText: 'Confirm Password',
+          hintText: 'Enter your password',
+          prefixIcon: const Icon(Icons.lock),
+          suffixIcon: GestureDetector(
+            onTap: () => provider?.changeVisibilityConfirmPassword(),
+            child: Icon(provider!.isVisiblePassword
+                ? Icons.visibility
+                : Icons.visibility_off),
+          ),
+          filled: true,
+        ),
         obscureText: provider!.isVisibleConfirmPassword,
       )
     ]);
