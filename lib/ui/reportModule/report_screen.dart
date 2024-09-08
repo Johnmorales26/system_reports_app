@@ -7,6 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:signature/signature.dart';
 import 'package:system_reports_app/ui/homeModule/home_screen.dart';
 import 'package:system_reports_app/ui/reportModule/report_view_model.dart';
+import 'package:system_reports_app/ui/reportModule/widgets/data_travel_widget.dart';
+import 'package:system_reports_app/ui/reportModule/widgets/general_data_widget.dart';
+import 'package:system_reports_app/ui/reportModule/widgets/record_times_widget.dart';
 import 'package:system_reports_app/ui/style/dimens.dart';
 import 'package:toastification/toastification.dart';
 import '../appModule/assets.dart';
@@ -64,12 +67,12 @@ class ReportScreen extends StatelessWidget {
             if (kIsWeb) {
               toastification.show(
                   context: context,
-                  title: const Text('Esta opción no está disponible en la web.'),
+                  title:
+                      const Text('Esta opción no está disponible en la web.'),
                   autoCloseDuration: const Duration(seconds: 5),
-                  type: ToastificationType.info
-              );
-                  Navigator.pushNamedAndRemoveUntil(
-                    context, HomeScreen.route, (Route<dynamic> route) => false);
+                  type: ToastificationType.info);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, HomeScreen.route, (Route<dynamic> route) => false);
             } else {
               final signature = await _getSignatureFile(viewModel);
               var response = await viewModel.generatePDF(signature);
@@ -82,8 +85,7 @@ class ReportScreen extends StatelessWidget {
                     context: context,
                     title: const Text('Error al subir el archivo'),
                     autoCloseDuration: const Duration(seconds: 5),
-                    type: ToastificationType.error
-                );
+                    type: ToastificationType.error);
               }
             }
           },
@@ -124,75 +126,11 @@ class _Form extends StatelessWidget {
     }
 
     return Column(children: [
-      TextField(
-          controller: provider.referenceNumberController,
-          decoration: const InputDecoration(
-            labelText: 'Reference Number',
-            hintText: 'Enter your reference number',
-            prefixIcon: Icon(Icons.code),
-            filled: true,
-          ),
-          keyboardType: TextInputType.text),
+      GeneralDataWidget(provider: provider),
       const SizedBox(height: Dimens.commonPaddingMin),
-      TextField(
-          controller: provider.clientController,
-          decoration: const InputDecoration(
-            labelText: 'Client',
-            hintText: 'Enter your client name',
-            prefixIcon: Icon(Icons.person),
-            filled: true,
-          ),
-          keyboardType: TextInputType.name),
+      DataTravelWidget(provider: provider),
       const SizedBox(height: Dimens.commonPaddingMin),
-      TextField(
-          controller: provider.locationController,
-          decoration: const InputDecoration(
-            labelText: 'Location',
-            hintText: 'Enter your location',
-            prefixIcon: Icon(Icons.location_on),
-            filled: true,
-          ),
-          keyboardType: TextInputType.streetAddress),
-      const SizedBox(height: Dimens.commonPaddingMin),
-      TextField(
-          controller: provider.nameFSEController,
-          decoration: const InputDecoration(
-            labelText: 'Name FSE',
-            hintText: 'Enter your name FSE',
-            prefixIcon: Icon(Icons.person_2),
-            filled: true,
-          ),
-          keyboardType: TextInputType.name),
-      const SizedBox(height: Dimens.commonPaddingMin),
-      TextField(
-          controller: provider.customManagerController,
-          decoration: const InputDecoration(
-            labelText: 'Custom Manager',
-            hintText: 'Enter your custom manager',
-            prefixIcon: Icon(Icons.person),
-            filled: true,
-          ),
-          keyboardType: TextInputType.name),
-      const SizedBox(height: Dimens.commonPaddingMin),
-      TextField(
-          controller: provider.activityPerformedController,
-          decoration: const InputDecoration(
-            labelText: 'Activity Performed',
-            hintText: 'Enter your activity performed',
-            prefixIcon: Icon(Icons.person),
-            filled: true,
-          ),
-          keyboardType: TextInputType.text),
-      const SizedBox(height: Dimens.commonPaddingMin),
-      TextField(
-          controller: provider.observationsController,
-          decoration: const InputDecoration(
-            labelText: 'Observations',
-            hintText: 'Enter your observations',
-            prefixIcon: Icon(Icons.notes),
-            filled: true,
-          ),
-          keyboardType: TextInputType.text),
+      RecordTimesWidget(provider: provider),
       const SizedBox(height: Dimens.commonPaddingMin),
       TextField(
           controller: provider.urlController,
