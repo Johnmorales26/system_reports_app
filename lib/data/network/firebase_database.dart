@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:system_reports_app/data/local/task_entity.dart';
 import 'package:system_reports_app/data/local/user_database.dart';
 import 'dart:io';
@@ -43,29 +44,49 @@ class FirebaseDatabase {
   }
 
   Future<bool> downloadFile(BuildContext context, String url, String selectedDirectory, String typeFile) async {
-    bool downloadSuccess = false;
-    print(url);
-    try {
-      final ref = FirebaseStorage.instance.refFromURL(url);
-      final fileName = ref.name;
-      var filePath = '';
-      if (typeFile == Constants.FILE_DOCUMENT) {
-        filePath = '$selectedDirectory/$fileName${Constants.EXTENSION_PDF}';
-      } else {
-        filePath = '$selectedDirectory/$fileName${Constants.EXTENSION_IMAGE}';
-      }
-      final file = File(filePath);
-      final downloadTask = ref.writeToFile(file);
-      downloadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-        //double progress = snapshot.bytesTransferred / snapshot.totalBytes.toDouble();
-      });
-      await downloadTask.whenComplete(() async {
-        downloadSuccess = true;
-      });
-    } catch (e) {
-      print('----> $e');
-      downloadSuccess = false;
+  bool downloadSuccess = false;
+
+  // Log del URL de descarga
+  Logger().d('Download URL: $url');
+  
+  try {
+    final ref = FirebaseStorage.instance.refFromURL(url);
+    final fileName = ref.name;
+
+    // Log del nombre del archivo obtenido
+    Logger().d('File Name: $fileName');
+
+    var filePath = '';
+    if (typeFile == Constants.FILE_DOCUMENT) {
+      filePath = '$selectedDirectory/$fileName${Constants.EXTENSION_PDF}';
+    } else {
+      filePath = '$selectedDirectory/$fileName${Constants.EXTENSION_IMAGE}';
     }
-    return downloadSuccess;
+
+    // Log del tipo de archivo y ruta final
+    Logger().d('File Type: $typeFile, File Path: $filePath');
+    
+    final file = File(filePath);
+    final downloadTask = ref.writeToFile(file);
+
+    downloadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+      // Log de progreso de la descarga
+      Logger().d('Download Progress: ${snapshot.bytesTransferred} / ${snapshot.totalBytes}');
+    });
+
+    await downloadTask.whenComplete(() async {
+      downloadSuccess = true;
+
+      // Log de finalización de la descarga
+      Logger().d('Download completed: $filePath');
+    });
+  } catch (e) {
+    // Log del error en la descarga
+    Logger().e('Download failed: $e');
+    downloadSuccess = false;
   }
+
+  return downloadSuccess;
+}
+
 }

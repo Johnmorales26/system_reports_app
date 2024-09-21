@@ -1,4 +1,3 @@
-import 'package:logger/logger.dart';
 import 'package:system_reports_app/data/local/user_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:system_reports_app/data/network/firebase_database.dart';
