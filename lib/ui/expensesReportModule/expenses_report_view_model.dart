@@ -26,6 +26,7 @@ class ExpensesReportViewModel extends ChangeNotifier {
   final TextEditingController expenseTypeController = TextEditingController();
   final TextEditingController billController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
+  var typeServiceValue = 0;
   var isBill = false;
   List<ExpenseEntity> expenses = [];
 
@@ -298,7 +299,23 @@ class ExpensesReportViewModel extends ChangeNotifier {
                   '\$${expenses.map((expense) => expense.amount).reduce((prev, element) => prev + element).toString()}',
                   ttf),
               pdfGenerator.buildTableRow(
-                  'Anticipo', '\$${advanceController.text}', ttf)
+                  'Anticipo', '\$${advanceController.text}', ttf),
+              pdfGenerator.buildTableRow(
+                  'Viaticos',
+                  '\$${(int.parse(daysController.text) * typeServiceValue) - int.parse(advanceController.toString())}',
+                  ttf),
+              pdfGenerator.buildTableRow(
+                  'Otros gatos',
+                  '\$${int.parse(daysController.text) * typeServiceValue}',
+                  ttf),
+              pdfGenerator.buildTableRow(
+                  'No facturado',
+                  '\$${int.parse(daysController.text) * typeServiceValue}',
+                  ttf),
+              pdfGenerator.buildTableRow(
+                  'Total',
+                  '\$${expenses.map((expense) => expense.amount).reduce((prev, element) => prev + element).toString()}',
+                  ttf),
             ])
           ]);
         }));

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:system_reports_app/ui/expensesReportModule/expenses_report_view_model.dart';
 import 'package:system_reports_app/ui/expensesReportModule/item_amounts.dart';
@@ -48,11 +47,10 @@ class ExpensesReportScreen extends StatelessWidget {
   void showDetails(BuildContext context, ExpensesReportViewModel viewModel) {
     if (viewModel.expenses.isEmpty) {
       toastification.show(
-        context: context,
-        title: const Text('Please add expenses'),
-        autoCloseDuration: const Duration(seconds: 5),
-        type: ToastificationType.info
-      );
+          context: context,
+          title: const Text('Please add expenses'),
+          autoCloseDuration: const Duration(seconds: 5),
+          type: ToastificationType.info);
     } else {
       final totalBilled = viewModel.expenses.fold(
           0.0,
@@ -60,11 +58,11 @@ class ExpensesReportScreen extends StatelessWidget {
               expense.isBill ? acumulator + expense.amount : acumulator);
       final totalUnbilled = viewModel.expenses.fold(
           0.0,
-          (acumulator, expense) =>
-              expense.isBill == false ? acumulator + expense.amount : acumulator);
-      final total = viewModel.expenses.fold(
-          0.0,
-          (acumulator, expense) => acumulator + expense.amount);
+          (acumulator, expense) => expense.isBill == false
+              ? acumulator + expense.amount
+              : acumulator);
+      final total = viewModel.expenses
+          .fold(0.0, (acumulator, expense) => acumulator + expense.amount);
 
       showModalBottomSheet(
         context: context,
@@ -74,7 +72,8 @@ class ExpensesReportScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('Report', style: Theme.of(context).textTheme.headlineMedium),
+                  Text('Report',
+                      style: Theme.of(context).textTheme.headlineMedium),
                   const SizedBox(height: Dimens.commonPaddingDefault),
                   Row(
                     children: [
@@ -106,6 +105,12 @@ class _Form extends StatelessWidget {
   final FocusNode clientFocusNode = FocusNode();
   final FocusNode advanceFocusNode = FocusNode();
   final FocusNode referenceFocusNode = FocusNode();
+
+  final servicesTypes = [
+    const MapEntry(100, 'Extranjero'),
+    const MapEntry(150, 'Local'),
+    const MapEntry(700, 'Foraneo')
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -155,16 +160,20 @@ class _Form extends StatelessWidget {
                       FocusScope.of(context).requestFocus(typeServiceFocusNode),
                 ),
                 const SizedBox(height: Dimens.commonPaddingDefault),
-                TextField(
-                  controller: viewModel.typeServiceController,
-                  decoration: const InputDecoration(
-                    labelText: 'Enter Service Type',
-                    border: OutlineInputBorder(),
-                  ),
-                  focusNode: typeServiceFocusNode,
-                  onEditingComplete: () =>
-                      FocusScope.of(context).requestFocus(clientFocusNode),
-                ),
+                DropdownButtonFormField(
+                    items: servicesTypes.map((MapEntry value) {
+                      return DropdownMenuItem<String>(
+                        value: value.value,
+                        child: Text(value.value),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      if (newValue != null) {
+                        viewModel.typeServiceController.text = newValue;
+                        var result = servicesTypes.firstWhere((item) => item.value == newValue);
+                        viewModel.typeServiceValue = result.key;
+                      }
+                    }),
                 const SizedBox(height: Dimens.commonPaddingDefault),
                 TextField(
                   controller: viewModel.clientController,
@@ -288,8 +297,7 @@ class _Expenses extends StatelessWidget {
                             context: context,
                             title: const Text('Please fill all fields'),
                             autoCloseDuration: const Duration(seconds: 5),
-                            type: ToastificationType.info
-                        );
+                            type: ToastificationType.info);
                       }
                     },
                     child: const Text('Add Expense')),
@@ -397,7 +405,8 @@ class _ListExpenses extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 0.0),
           elevation: 2.0,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            padding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             child: ItemExpense(
               expenseEntity: viewModel.expenses[index],
               onDelete: () => viewModel.itemDelete(index),
@@ -408,7 +417,8 @@ class _ListExpenses extends StatelessWidget {
     );
   }
 
-  Widget _buildActions(ExpensesReportViewModel viewModel, BuildContext context) {
+  Widget _buildActions(
+      ExpensesReportViewModel viewModel, BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -417,7 +427,8 @@ class _ListExpenses extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           label: const Text('Back'),
           style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
           ),
         ),
         ElevatedButton.icon(
@@ -430,7 +441,8 @@ class _ListExpenses extends StatelessWidget {
           icon: const Icon(Icons.cloud_upload),
           label: const Text('Upload'),
           style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
           ),
         ),
       ],
