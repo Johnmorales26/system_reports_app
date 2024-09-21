@@ -1,3 +1,4 @@
+import 'package:logger/logger.dart';
 import 'package:system_reports_app/data/local/user_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:system_reports_app/data/network/firebase_database.dart';
@@ -6,16 +7,17 @@ import 'package:system_reports_app/ui/homeModule/home_screen.dart';
 class FirebaseAuthentication {
   final db = FirebaseDatabase();
 
-  Future<String> signUpWithEmailAndPassword(
-      UserDatabase user, String password) async {
+  Future<String> signUpWithEmailAndPassword(UserDatabase user, String password) async {
     try {
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: user.email,
         password: password,
       );
+      
       user.uid = credential.user?.uid;
+      
       bool userCreationSuccess = await db.createNewUser(user);
+      
       if (userCreationSuccess) {
         return HomeScreen.route;
       } else {
@@ -36,8 +38,8 @@ class FirebaseAuthentication {
   Future<String> signInWithEmailAndPassword(
       String email, String password) async {
     try {
-      //final credential = await FirebaseAuth.instance
-          //.signInWithEmailAndPassword(email: email, password: password);
+      final credential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
       return HomeScreen.route;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {

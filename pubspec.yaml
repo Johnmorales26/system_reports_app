@@ -59,6 +59,7 @@ dependencies:
   signature: ^5.5.0
   flutter_launcher_icons: ^0.13.1
   toastification: ^2.1.0
+  logger: ^1.0.0
 
 dev_dependencies:
   flutter_test:
