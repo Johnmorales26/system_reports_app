@@ -102,6 +102,18 @@ class ExpensesReportViewModel extends ChangeNotifier {
     final logo = await rootBundle.load(Assets.imgSilbec);
     final imageBytes = logo.buffer.asUint8List();
 
+    // Obtener el valor de Viáticos
+    double viaticos =
+        (double.tryParse(daysController.text) ?? 0) * typeServiceValue;
+
+// Obtener el valor de Otros gastos
+    double otrosGastos = expenses
+        .where((expense) => expense.isBill)
+        .fold(0.0, (prev, expense) => prev + expense.amount);
+
+// Calcular el Total (Viáticos + Otros gastos - typeServiceValue)
+    double total = (viaticos + otrosGastos) - int.parse(advanceController.text);
+
     pdf.addPage(pw.Page(
         pageFormat: PdfPageFormat.a4,
         build: (pw.Context context) {
@@ -287,35 +299,45 @@ class ExpensesReportViewModel extends ChangeNotifier {
             pw.SizedBox(height: Dimens.commonPaddingDefault),
             pw.Table(children: [
               pdfGenerator.buildTableRow(
-                  'Facturado',
-                  '\$${expenses.where((expense) => expense.isBill).fold(0.0, (prev, expense) => prev + expense.amount).toString()}',
-                  ttf),
+                'Facturado',
+                '\$${expenses.where((expense) => expense.isBill).fold(0.0, (prev, expense) => prev + expense.amount).toStringAsFixed(2)}',
+                ttf,
+              ),
               pdfGenerator.buildTableRow(
-                  'Sin Factura',
-                  '\$${expenses.where((expense) => expense.isBill == false).fold(0.0, (prev, expense) => prev + expense.amount).toString()}',
-                  ttf),
+                'Sin Factura',
+                '\$${expenses.where((expense) => !expense.isBill).fold(0.0, (prev, expense) => prev + expense.amount).toStringAsFixed(2)}',
+                ttf,
+              ),
               pdfGenerator.buildTableRow(
-                  'Total Reportado',
-                  '\$${expenses.map((expense) => expense.amount).reduce((prev, element) => prev + element).toString()}',
-                  ttf),
+                'Total Reportado',
+                '\$${expenses.map((expense) => expense.amount).reduce((prev, element) => prev + element).toStringAsFixed(2)}',
+                ttf,
+              ),
               pdfGenerator.buildTableRow(
-                  'Anticipo', '\$${advanceController.text}', ttf),
+                'Anticipo',
+                '\$${advanceController.text}',
+                ttf,
+              ),
               pdfGenerator.buildTableRow(
-                  'Viaticos',
-                  '\$${(int.parse(daysController.text) * typeServiceValue) - int.parse(advanceController.toString())}',
-                  ttf),
+                'Viaticos',
+                '\$${viaticos.toStringAsFixed(2)}',
+                ttf,
+              ),
               pdfGenerator.buildTableRow(
-                  'Otros gatos',
-                  '\$${int.parse(daysController.text) * typeServiceValue}',
-                  ttf),
+                'Otros gastos',
+                '\$${otrosGastos.toStringAsFixed(2)}',
+                ttf,
+              ),
               pdfGenerator.buildTableRow(
-                  'No facturado',
-                  '\$${int.parse(daysController.text) * typeServiceValue}',
-                  ttf),
+                'No facturado',
+                '\$${(double.tryParse(daysController.text) ?? 0) * typeServiceValue}',
+                ttf,
+              ),
               pdfGenerator.buildTableRow(
-                  'Total',
-                  '\$${expenses.map((expense) => expense.amount).reduce((prev, element) => prev + element).toString()}',
-                  ttf),
+                'Total',
+                '\$${total.toStringAsFixed(2)}',
+                ttf,
+              ),
             ])
           ]);
         }));
