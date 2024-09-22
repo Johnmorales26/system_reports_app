@@ -16,7 +16,11 @@ class ItemExpense extends StatelessWidget {
       children: [
         Expanded(child: Text(expenseEntity.id.toString().trim())),
         Expanded(child: Text(expenseEntity.typeExpense)),
-        Expanded(child: Checkbox(onChanged: (value) {}, value: expenseEntity.isBill)),
+        Expanded(child: Checkbox(onChanged: (value) {
+          if (value != null) {
+            expenseEntity.isBill = value;
+          }
+        }, value: expenseEntity.isBill)),
         Expanded(child: Text(expenseEntity.bill)),
         Expanded(child: Text('${expenseEntity.amount}')),
         Expanded(child: IconButton(onPressed: () => onDelete, icon: const Icon(Icons.delete))),

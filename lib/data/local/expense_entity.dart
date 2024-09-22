@@ -2,7 +2,7 @@ class ExpenseEntity {
 
   final int id;
   final String typeExpense;
-  final bool isBill;
+  bool isBill;
   final String bill;
   final double amount;
 
