@@ -253,19 +253,22 @@ class ExpensesReportViewModel extends ChangeNotifier {
                       ),
                     )),
                     pw.Expanded(
-                        child: pw.Container(
-                      color: PdfColors
-                          .white, // Fondo blanco para la celda de valor
-                      padding: const pw.EdgeInsets.all(8),
-                      child: pw.Text(
-                        expense.amount == true ? 'Si' : 'No',
-                        style: pw.TextStyle(
-                          font: ttf,
-                          color: PdfColors
-                              .black, // Color del texto en la celda de valor
+                      child: pw.Container(
+                        color: PdfColors
+                            .white, // Fondo blanco para la celda de valor
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text(
+                          expense.amount == true
+                              ? 'Sí'
+                              : 'No', // Usando tilde en "Sí" si es una respuesta afirmativa
+                          style: pw.TextStyle(
+                            font: ttf,
+                            color: PdfColors
+                                .black, // Color del texto en la celda de valor
+                          ),
                         ),
                       ),
-                    )),
+                    ),
                     pw.Expanded(
                         child: pw.Container(
                       color: PdfColors
