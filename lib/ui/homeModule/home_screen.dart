@@ -128,8 +128,7 @@ class _HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<HomeViewModel>(context);
 
-    Widget adminMenu = Container();
-    if (snapshot.privileges == UserPrivileges.admin) adminMenu = _AdminMenu();
+    Widget adminMenu = _AdminMenu(snapshot.privileges);
 
     return Scaffold(
         appBar: AppBar(
@@ -152,6 +151,10 @@ class _HomeScreen extends StatelessWidget {
 }
 
 class _AdminMenu extends StatefulWidget {
+  const _AdminMenu(this.privileges);
+
+  final UserPrivileges privileges;
+
   @override
   __AdminMenuState createState() => __AdminMenuState();
 }
@@ -199,13 +202,15 @@ class __AdminMenuState extends State<_AdminMenu> {
             ),
             if (showListTiles) ...[
               const SizedBox(height: Dimens.commonPaddingDefault),
-              ListTile(
-                leading: const Icon(Icons.add_box_outlined),
-                title: const Text('New Report'),
-                subtitle: const Text('Create a new report from scratch.'),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () => Navigator.pushNamed(context, ReportScreen.route),
-              ),
+              if (widget.privileges == UserPrivileges.admin)
+                ListTile(
+                  leading: const Icon(Icons.add_box_outlined),
+                  title: const Text('New Report'),
+                  subtitle: const Text('Create a new report from scratch.'),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () => Navigator.pushNamed(context, ReportScreen.route),
+                ),
+                if (widget.privileges == UserPrivileges.admin)
               ListTile(
                 leading: const Icon(Icons.computer_outlined),
                 title: const Text('Computer Report'),
@@ -213,18 +218,20 @@ class __AdminMenuState extends State<_AdminMenu> {
                 trailing: const Icon(Icons.arrow_forward_ios),
                 onTap: () => Navigator.pushNamed(context, ReportScreen.route),
               ),
+              if (widget.privileges == UserPrivileges.admin)
               ListTile(
                 leading: const Icon(Icons.car_crash_outlined),
                 title: const Text('Vehicle Report'),
                 subtitle: const Text('Create a report for a vehicle.'),
                 onTap: () => Navigator.pushNamed(context, ReportScreen.route),
-              ),
+              ),if (widget.privileges == UserPrivileges.user)
               ListTile(
                 leading: const Icon(Icons.money_outlined),
                 title: const Text('Expense Report'),
                 subtitle: const Text('Create a report for expenses.'),
                 trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () => Navigator.pushNamed(context, ExpensesReportScreen.route),
+                onTap: () =>
+                    Navigator.pushNamed(context, ExpensesReportScreen.route),
               ),
             ],
           ],
@@ -268,8 +275,8 @@ class _TaskList extends StatelessWidget {
 
             final data = streamSnapshot.data;
             final tasks = data?.docs
-                .map((doc) => TaskEntity.fromJson(doc.data()))
-                .toList() ??
+                    .map((doc) => TaskEntity.fromJson(doc.data()))
+                    .toList() ??
                 [];
 
             if (tasks.isEmpty) {
