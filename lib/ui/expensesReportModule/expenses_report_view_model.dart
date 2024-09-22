@@ -259,7 +259,7 @@ class ExpensesReportViewModel extends ChangeNotifier {
                             .white, // Fondo blanco para la celda de valor
                         padding: const pw.EdgeInsets.all(8),
                         child: pw.Text(
-                          expense.amount == true
+                          (expense.isBill == true)
                               ? 'Sí'
                               : 'No', // Usando tilde en "Sí" si es una respuesta afirmativa
                           style: pw.TextStyle(
