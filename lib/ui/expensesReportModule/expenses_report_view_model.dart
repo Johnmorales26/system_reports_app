@@ -107,9 +107,10 @@ class ExpensesReportViewModel extends ChangeNotifier {
         (double.tryParse(daysController.text) ?? 0) * typeServiceValue;
 
 // Obtener el valor de Otros gastos
-    double otrosGastos = expenses
-        .where((expense) => expense.isBill)
-        .fold(0.0, (prev, expense) => prev + expense.amount);
+    double otrosGastos = expenses.fold(
+      0.0,
+      (prev, expense) => prev + expense.amount,
+    );
 
 // Calcular el Total (Viáticos + Otros gastos - typeServiceValue)
     double total = (viaticos + otrosGastos) - int.parse(advanceController.text);
