@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:system_reports_app/data/local/user_database.dart';
 import 'package:system_reports_app/ui/expensesReportModule/expenses_report_screen.dart';
 import 'package:system_reports_app/ui/homeModule/home_view_model.dart';
+import 'package:system_reports_app/ui/homeModule/widgets/reports_inner_screen.dart';
 import 'package:system_reports_app/ui/registerModule/user_privileges.dart';
 import 'package:system_reports_app/ui/signInModule/sign_in_screen.dart';
 import 'package:system_reports_app/ui/style/dimens.dart';
@@ -129,6 +130,32 @@ class _HomeScreen extends StatelessWidget {
     final provider = Provider.of<HomeViewModel>(context);
 
     Widget adminMenu = _AdminMenu(snapshot.privileges);
+    Widget bottomBar = Container();
+
+    if (snapshot.privileges == UserPrivileges.admin) {
+      bottomBar = NavigationBar(
+          onDestinationSelected: (int index) {
+            provider.updateIndex(index);
+          },
+          selectedIndex: provider.currentPageIndex,
+          destinations: const [
+            NavigationDestination(
+              selectedIcon: Icon(Icons.home),
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.file_copy),
+              selectedIcon: Icon(Icons.file_copy_outlined),
+              label: 'Reports',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.person),
+              icon: Icon(Icons.person_outline),
+              label: 'Profile',
+            )
+          ]);
+    }
 
     return Scaffold(
         appBar: AppBar(
@@ -143,10 +170,15 @@ class _HomeScreen extends StatelessWidget {
                 icon: const Icon(Icons.exit_to_app))
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(Dimens.commonPaddingDefault),
-          child: Column(children: [adminMenu, _TaskList()]),
-        ));
+        body: [
+          Padding(
+            padding: const EdgeInsets.all(Dimens.commonPaddingDefault),
+            child: Column(children: [adminMenu, _TaskList()]),
+          ),
+          const ReportsInnerScreen(),
+          Container()
+        ][provider.currentPageIndex],
+        bottomNavigationBar: bottomBar);
   }
 }
 
@@ -210,29 +242,30 @@ class __AdminMenuState extends State<_AdminMenu> {
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () => Navigator.pushNamed(context, ReportScreen.route),
                 ),
-                if (widget.privileges == UserPrivileges.admin)
-              ListTile(
-                leading: const Icon(Icons.computer_outlined),
-                title: const Text('Computer Report'),
-                subtitle: const Text('Create a report for a computer.'),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () => Navigator.pushNamed(context, ReportScreen.route),
-              ),
               if (widget.privileges == UserPrivileges.admin)
-              ListTile(
-                leading: const Icon(Icons.car_crash_outlined),
-                title: const Text('Vehicle Report'),
-                subtitle: const Text('Create a report for a vehicle.'),
-                onTap: () => Navigator.pushNamed(context, ReportScreen.route),
-              ),if (widget.privileges == UserPrivileges.user)
-              ListTile(
-                leading: const Icon(Icons.money_outlined),
-                title: const Text('Expense Report'),
-                subtitle: const Text('Create a report for expenses.'),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () =>
-                    Navigator.pushNamed(context, ExpensesReportScreen.route),
-              ),
+                ListTile(
+                  leading: const Icon(Icons.computer_outlined),
+                  title: const Text('Computer Report'),
+                  subtitle: const Text('Create a report for a computer.'),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () => Navigator.pushNamed(context, ReportScreen.route),
+                ),
+              if (widget.privileges == UserPrivileges.admin)
+                ListTile(
+                  leading: const Icon(Icons.car_crash_outlined),
+                  title: const Text('Vehicle Report'),
+                  subtitle: const Text('Create a report for a vehicle.'),
+                  onTap: () => Navigator.pushNamed(context, ReportScreen.route),
+                ),
+              if (widget.privileges == UserPrivileges.user)
+                ListTile(
+                  leading: const Icon(Icons.money_outlined),
+                  title: const Text('Expense Report'),
+                  subtitle: const Text('Create a report for expenses.'),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () =>
+                      Navigator.pushNamed(context, ExpensesReportScreen.route),
+                ),
             ],
           ],
         ),

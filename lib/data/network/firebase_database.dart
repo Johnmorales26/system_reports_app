@@ -13,16 +13,26 @@ class FirebaseDatabase {
 
   Future<bool> createNewUser(UserDatabase user) async {
     try {
-      await db.collection(Constants.COLLECTION_USERS).doc(user.uid).set(user.toJson());
+      await db
+          .collection(Constants.COLLECTION_USERS)
+          .doc(user.uid)
+          .set(user.toJson());
       return true;
     } catch (error) {
       return false;
     }
   }
 
+  Future<QuerySnapshot<Map<String, dynamic>>> fetchAllUsers() async {
+    return await db.collection(Constants.COLLECTION_USERS).get();
+  }
+
   Future<bool> createTask(TaskEntity taskEntity) async {
     try {
-      await db.collection(Constants.COLLECTION_TASKS).doc(taskEntity.id.toString()).set(taskEntity.toJson());
+      await db
+          .collection(Constants.COLLECTION_TASKS)
+          .doc(taskEntity.id.toString())
+          .set(taskEntity.toJson());
       return true;
     } catch (error) {
       return false;
@@ -37,56 +47,61 @@ class FirebaseDatabase {
     await db.collection(Constants.COLLECTION_TASKS).doc(taskId).delete();
   }
 
+  Future<QuerySnapshot<Map<String, dynamic>>> fetchTasksByUidUser(String uidUser) {
+    return db.collection(Constants.COLLECTION_TASKS).where('uidUser', isEqualTo: uidUser).get();
+  }
+
   Future<void> updateTaskStatus(String taskId, bool isChecked) async {
     await db.collection(Constants.COLLECTION_TASKS).doc(taskId).update({
       Constants.PROPERTY_STATUS: isChecked,
     });
   }
 
-  Future<bool> downloadFile(BuildContext context, String url, String selectedDirectory, String typeFile) async {
-  bool downloadSuccess = false;
+  Future<bool> downloadFile(BuildContext context, String url,
+      String selectedDirectory, String typeFile) async {
+    bool downloadSuccess = false;
 
-  // Log del URL de descarga
-  Logger().d('Download URL: $url');
-  
-  try {
-    final ref = FirebaseStorage.instance.refFromURL(url);
-    final fileName = ref.name;
+    // Log del URL de descarga
+    Logger().d('Download URL: $url');
 
-    // Log del nombre del archivo obtenido
-    Logger().d('File Name: $fileName');
+    try {
+      final ref = FirebaseStorage.instance.refFromURL(url);
+      final fileName = ref.name;
 
-    var filePath = '';
-    if (typeFile == Constants.FILE_DOCUMENT) {
-      filePath = '$selectedDirectory/$fileName${Constants.EXTENSION_PDF}';
-    } else {
-      filePath = '$selectedDirectory/$fileName${Constants.EXTENSION_IMAGE}';
+      // Log del nombre del archivo obtenido
+      Logger().d('File Name: $fileName');
+
+      var filePath = '';
+      if (typeFile == Constants.FILE_DOCUMENT) {
+        filePath = '$selectedDirectory/$fileName${Constants.EXTENSION_PDF}';
+      } else {
+        filePath = '$selectedDirectory/$fileName${Constants.EXTENSION_IMAGE}';
+      }
+
+      // Log del tipo de archivo y ruta final
+      Logger().d('File Type: $typeFile, File Path: $filePath');
+
+      final file = File(filePath);
+      final downloadTask = ref.writeToFile(file);
+
+      downloadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+        // Log de progreso de la descarga
+        Logger().d(
+            'Download Progress: ${snapshot.bytesTransferred} / ${snapshot.totalBytes}');
+      });
+
+      await downloadTask.whenComplete(() async {
+        downloadSuccess = true;
+
+        // Log de finalización de la descarga
+        Logger().d('Download completed: $filePath');
+      });
+    } catch (e) {
+      // Log del error en la descarga
+      Logger().e('Download failed: $e');
+      downloadSuccess = false;
     }
 
-    // Log del tipo de archivo y ruta final
-    Logger().d('File Type: $typeFile, File Path: $filePath');
-    
-    final file = File(filePath);
-    final downloadTask = ref.writeToFile(file);
-
-    downloadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-      // Log de progreso de la descarga
-      Logger().d('Download Progress: ${snapshot.bytesTransferred} / ${snapshot.totalBytes}');
-    });
-
-    await downloadTask.whenComplete(() async {
-      downloadSuccess = true;
-
-      // Log de finalización de la descarga
-      Logger().d('Download completed: $filePath');
-    });
-  } catch (e) {
-    // Log del error en la descarga
-    Logger().e('Download failed: $e');
-    downloadSuccess = false;
+    return downloadSuccess;
   }
-
-  return downloadSuccess;
-}
-
 }

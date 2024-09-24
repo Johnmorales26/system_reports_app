@@ -26,7 +26,7 @@ class App extends StatelessWidget {
           SliderScreen.route: (context) => SliderScreen(),
           SignInScreen.route: (context) => const SignInScreen(),
           SignUpScreen.route: (context) => const SignUpScreen(),
-          HomeScreen.route: (context) => const HomeScreen(),
+          HomeScreen.route: (context) => HomeScreen(),
           ReportScreen.route: (context) => const ReportScreen(),
           ExpensesReportScreen.route: (context) => const ExpensesReportScreen()
         });

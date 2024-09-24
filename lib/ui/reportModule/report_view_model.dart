@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
@@ -240,8 +241,12 @@ class ReportViewModel extends ChangeNotifier {
   }
 
   Future<bool> saveInFirestore(String downloadURL) {
-    final taskEntity = TaskEntity(DateTime.now().millisecondsSinceEpoch,
-        customerData.referenceNumberController.text, downloadURL, false,
+    final taskEntity = TaskEntity(
+        DateTime.now().millisecondsSinceEpoch,
+        customerData.referenceNumberController.text,
+        downloadURL,
+        FirebaseAuth.instance.currentUser!.uid,
+        false,
         image: urlController.text);
     return firebaseDatabase.createTask(taskEntity);
   }

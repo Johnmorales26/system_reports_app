@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'web_image_picker.dart' if (dart.library.io) 'mobile_image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -350,7 +352,7 @@ class ExpensesReportViewModel extends ChangeNotifier {
 
   Future<bool> saveInFirestore(String downloadURL) {
     final taskEntity = TaskEntity(DateTime.now().millisecondsSinceEpoch,
-        referenceController.text, downloadURL, false,
+        referenceController.text, downloadURL, FirebaseAuth.instance.currentUser!.uid, false,
         image: '');
     return firebaseDatabase.createTask(taskEntity);
   }

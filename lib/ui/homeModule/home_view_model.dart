@@ -11,6 +11,9 @@ class HomeViewModel extends ChangeNotifier {
   final FirebaseCurrentUser currentUser = FirebaseCurrentUser();
   final FirebaseDatabase db = FirebaseDatabase();
 
+  int _currentPageIndex = 0;
+  int get currentPageIndex => _currentPageIndex;
+
   Future<UserDatabase?> getCurrentUserByFirestore() {
     return Future.delayed(const Duration(milliseconds: 5000), () {
       return currentUser.currentUser;
@@ -36,5 +39,10 @@ class HomeViewModel extends ChangeNotifier {
   Future<bool> downloadFile(BuildContext context, String url,
       String selectedDirectory, String typeFile) {
     return db.downloadFile(context, url, selectedDirectory, typeFile);
+  }
+
+  void updateIndex(int index) {
+    _currentPageIndex = index;
+    notifyListeners();
   }
 }
