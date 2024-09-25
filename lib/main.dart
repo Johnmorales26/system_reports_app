@@ -5,6 +5,7 @@ import 'package:system_reports_app/ui/appModule/app.dart';
 import 'package:system_reports_app/ui/expensesReportModule/expenses_report_view_model.dart';
 import 'package:system_reports_app/ui/homeModule/home_view_model.dart';
 import 'package:system_reports_app/ui/homeModule/widgets/reports_view_model.dart';
+import 'package:system_reports_app/ui/profileModule/profile_view_model.dart';
 import 'package:system_reports_app/ui/registerModule/sign_up_view_model.dart';
 import 'package:system_reports_app/ui/reportModule/report_view_model.dart';
 import 'firebase_options.dart';
@@ -22,7 +23,8 @@ void main() async {
       ChangeNotifierProvider(create: (_) => HomeViewModel()),
       ChangeNotifierProvider(create: (_) => ReportViewModel()),
       ChangeNotifierProvider(create: (_) => ExpensesReportViewModel()),
-      ChangeNotifierProvider(create: (_) => ReportsInnerViewModel())
+      ChangeNotifierProvider(create: (_) => ReportsInnerViewModel()),
+      ChangeNotifierProvider(create: (_) => ProfileViewModel())
     ],
     child: const App()
   ));

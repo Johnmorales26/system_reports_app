@@ -6,6 +6,7 @@ import 'package:system_reports_app/data/local/user_database.dart';
 import 'package:system_reports_app/ui/expensesReportModule/expenses_report_screen.dart';
 import 'package:system_reports_app/ui/homeModule/home_view_model.dart';
 import 'package:system_reports_app/ui/homeModule/widgets/reports_inner_screen.dart';
+import 'package:system_reports_app/ui/profileModule/profile_screen.dart';
 import 'package:system_reports_app/ui/registerModule/user_privileges.dart';
 import 'package:system_reports_app/ui/signInModule/sign_in_screen.dart';
 import 'package:system_reports_app/ui/style/dimens.dart';
@@ -160,7 +161,7 @@ class _HomeScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text('System Reports'),
+          title: Text(['System Reports', 'Reports', 'Perfil de Usuario'][provider.currentPageIndex]),
           actions: [
             IconButton(
                 onPressed: () {
@@ -176,7 +177,7 @@ class _HomeScreen extends StatelessWidget {
             child: Column(children: [adminMenu, _TaskList()]),
           ),
           const ReportsInnerScreen(),
-          Container()
+          const ProfileScreen()
         ][provider.currentPageIndex],
         bottomNavigationBar: bottomBar);
   }

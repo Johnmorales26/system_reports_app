@@ -44,5 +44,9 @@ class FirebaseCurrentUser {
     });
   }
 
+  User? fetchCurrentUserByFirebase() {
+    return FirebaseAuth.instance.currentUser;
+  }
+
   UserDatabase? get currentUser => _userDatabase;
 }

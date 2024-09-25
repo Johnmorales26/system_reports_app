@@ -47,14 +47,35 @@ class FirebaseDatabase {
     await db.collection(Constants.COLLECTION_TASKS).doc(taskId).delete();
   }
 
-  Future<QuerySnapshot<Map<String, dynamic>>> fetchTasksByUidUser(String uidUser) {
-    return db.collection(Constants.COLLECTION_TASKS).where('uidUser', isEqualTo: uidUser).get();
+  Future<QuerySnapshot<Map<String, dynamic>>> fetchTasksByUidUser(
+      String uidUser) {
+    return db
+        .collection(Constants.COLLECTION_TASKS)
+        .where('uidUser', isEqualTo: uidUser)
+        .get();
   }
 
   Future<void> updateTaskStatus(String taskId, bool isChecked) async {
     await db.collection(Constants.COLLECTION_TASKS).doc(taskId).update({
       Constants.PROPERTY_STATUS: isChecked,
     });
+  }
+
+  Future<String?> uploadImageToFirebaseStorage(File imageFile) async {
+    try {
+      print(imageFile);
+      final storageRef = FirebaseStorage.instance.ref();
+      final imageRef = storageRef.child('user_photos/${(imageFile.path.split('/').last)}');
+
+      await imageRef.putFile(imageFile);
+
+      final downloadUrl = await imageRef.getDownloadURL();
+      print(downloadUrl);
+      return downloadUrl;
+    } catch (e) {
+      print('Error uploading image: $e');
+      return null;
+    }
   }
 
   Future<bool> downloadFile(BuildContext context, String url,
