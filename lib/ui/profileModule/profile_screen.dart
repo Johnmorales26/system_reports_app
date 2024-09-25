@@ -88,8 +88,6 @@ class ProfileEditDataView extends StatelessWidget {
         TextEditingController(text: user.displayName);
     final TextEditingController emailController =
         TextEditingController(text: user.email);
-    final TextEditingController phoneController =
-        TextEditingController(text: user.phoneNumber);
 
     return Scaffold(
       appBar: AppBar(
