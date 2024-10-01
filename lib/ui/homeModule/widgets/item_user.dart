@@ -16,7 +16,8 @@ class ItemUser extends StatefulWidget {
 }
 
 class _ItemUserState extends State<ItemUser> {
-  bool _isExpanded = false; // Variable para controlar la visibilidad del listado
+  bool _isExpanded =
+      false; // Variable para controlar la visibilidad del listado
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +29,9 @@ class _ItemUserState extends State<ItemUser> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                ClipOval(
+                    child: Image.network(widget.user.image,
+                        width: 50, height: 50, fit: BoxFit.cover)),
                 Text(widget.user.name),
                 IconButton(
                   icon: Icon(
@@ -35,7 +39,8 @@ class _ItemUserState extends State<ItemUser> {
                   ),
                   onPressed: () {
                     setState(() {
-                      _isExpanded = !_isExpanded; // Cambia el estado de expansión
+                      _isExpanded =
+                          !_isExpanded; // Cambia el estado de expansión
                     });
                   },
                 ),
@@ -51,11 +56,13 @@ class _ItemUserState extends State<ItemUser> {
                     ); // Muestra un indicador de carga
                   } else if (snapshot.hasError) {
                     return Center(
-                      child: Text('Error: ${snapshot.error}'), // Muestra un mensaje de error
+                      child: Text(
+                          'Error: ${snapshot.error}'), // Muestra un mensaje de error
                     );
                   } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                     return const Center(
-                      child: Text('No tasks found for this user.'), // Muestra mensaje si no hay datos
+                      child: Text(
+                          'No tasks found for this user.'), // Muestra mensaje si no hay datos
                     );
                   }
 
@@ -64,8 +71,10 @@ class _ItemUserState extends State<ItemUser> {
                   }).toList();
 
                   return ListView.builder(
-                    shrinkWrap: true, // Esto permite que la ListView tome solo el espacio necesario
-                    physics: const NeverScrollableScrollPhysics(), // Desactiva el desplazamiento
+                    shrinkWrap:
+                        true, // Esto permite que la ListView tome solo el espacio necesario
+                    physics:
+                        const NeverScrollableScrollPhysics(), // Desactiva el desplazamiento
                     itemCount: tasks.length,
                     itemBuilder: (context, index) {
                       final task = tasks[index];

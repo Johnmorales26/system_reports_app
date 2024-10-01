@@ -17,4 +17,26 @@ class ProfileRepository {
     return db.uploadImageToFirebaseStorage(imageFile);
   }
 
+  void updateNameProfile(String name) async {
+    final user = auth.fetchCurrentUserByFirebase();
+    if (user != null) {
+      final userDb = await db.getUserById(user.uid);
+      if (userDb != null) {
+        userDb.name = name;
+        auth.updateDocumentById(user.uid, userDb.toJson());
+      }
+    }
+  }
+
+  void updateImageProfile(String response) async {
+    final user = auth.fetchCurrentUserByFirebase();
+    if (user != null) {
+      final userDb = await db.getUserById(user.uid);
+      if (userDb != null) {
+        userDb.image = response;
+        auth.updateDocumentById(user.uid, userDb.toJson());
+      }
+    }
+  }
+
 }

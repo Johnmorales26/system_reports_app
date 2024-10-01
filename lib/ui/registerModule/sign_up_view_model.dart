@@ -36,7 +36,7 @@ class SignUpViewModel extends ChangeNotifier {
         confirmPassword.isEmpty) {
       return 'Confirm password cannot be empty';
     }
-    UserDatabase user = UserDatabase(null, name, email, UserPrivileges.user);
+    UserDatabase user = UserDatabase(null, name, "", email, UserPrivileges.user);
     return _auth.signUpWithEmailAndPassword(user, password);
   }
 

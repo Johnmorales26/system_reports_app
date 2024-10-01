@@ -44,6 +44,19 @@ class FirebaseCurrentUser {
     });
   }
 
+  Future<void> updateDocumentById(String docId, Map<String, dynamic> updatedData) async {
+    final docRef = FirebaseFirestore.instance
+        .collection(Constants.COLLECTION_USERS)
+        .doc(docId); // Usamos el docId pasado como argumento
+
+    try {
+      await docRef.update(updatedData);
+      logger.i("Document with ID: $docId updated successfully.");
+    } catch (e) {
+      logger.e("Error updating document with ID: $docId", e);
+    }
+  }
+
   User? fetchCurrentUserByFirebase() {
     return FirebaseAuth.instance.currentUser;
   }

@@ -23,6 +23,23 @@ class FirebaseDatabase {
     }
   }
 
+  Future<UserDatabase?> getUserById(String uid) async {
+  try {
+    final docSnapshot = await FirebaseFirestore.instance
+        .collection(Constants.COLLECTION_USERS)
+        .doc(uid)
+        .get();
+
+    if (docSnapshot.exists) {
+      return UserDatabase.fromJson(docSnapshot.data()!);
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
+  }
+}
+
   Future<QuerySnapshot<Map<String, dynamic>>> fetchAllUsers() async {
     return await db.collection(Constants.COLLECTION_USERS).get();
   }

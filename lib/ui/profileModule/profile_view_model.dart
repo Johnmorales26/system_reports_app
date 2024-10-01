@@ -41,6 +41,7 @@ class ProfileViewModel extends ChangeNotifier {
     final response = await repository.uploadImageToFirebaseStorage(imageFile);
     if (response != null) {
       currentUser?.updatePhotoURL(response);
+    repository.updateImageProfile(response);
       await Future.delayed(const Duration(seconds: 3), () {
         _inProgress = false;
         fetchCurrentUser();
@@ -52,6 +53,7 @@ class ProfileViewModel extends ChangeNotifier {
     _inProgress = true;
     notifyListeners();
     if (name.isNotEmpty) currentUser?.updateDisplayName(name);
+    repository.updateNameProfile(name);
     await Future.delayed(const Duration(seconds: 3), () {
       _inProgress = false;
       fetchCurrentUser();
